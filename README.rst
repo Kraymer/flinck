@@ -1,8 +1,8 @@
 .. image:: https://raw.githubusercontent.com/Kraymer/flinck/master/docs/_static/logo.png
+=====================
 
-    [flingk]
-     1. *verb tr., slang.* To create a symlink to a movie (flick)
-
+     [flingk]
+      1. *verb tr., slang.* To create a symlink to a movie (flick)
 
 Description
 -----------
