@@ -11,17 +11,15 @@ from glob import glob
 from config import config
 
 
-ROOT_DIR = config['link_root_dir'].as_filename()
-
-
 def resolve_template(template, item):
     """Resolve template pattern, replacing placeholders by item values.
     """
+    root_dir = config['link_root_dir'].as_filename()
     placeholders = re.findall(r'(\%\{?\w+\}?)', template)
     path = template
     for p in placeholders:
         path = path.replace(p, item[p.strip('%{}')])
-    return os.path.join(ROOT_DIR, path)
+    return os.path.join(root_dir, path)
 
 
 def create_dir(link_dir):

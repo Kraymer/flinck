@@ -8,6 +8,7 @@
 import argparse
 import os
 import sys
+import confit
 
 import brain
 
@@ -18,11 +19,16 @@ from linker import Linker
 def parse_args(argv):
     """Build application argument parser and parse command line.
     """
+    try:
+        root_defined = config['link_root_dir'].get()
+    except confit.NotFoundError:
+        root_defined = False
     parser = argparse.ArgumentParser(
         description='Organize your movie collection using symbolic links')
     parser.add_argument('media_src', metavar='FILE|DIR',
                         help='Media file or directory')
-    parser.add_argument('-l', '--link_dir', help='Links directory')
+    parser.add_argument('-l', '--link_dir', help='Links directory',
+                        dest='link_root_dir', required=(not root_defined))
     parser.add_argument('-f', '--full-dir-scan', action='store_true',
                         help='Link all files, not just the new ones')
     parser.add_argument('--by', choices=['country', 'director', 'decade',
@@ -49,7 +55,10 @@ def main(argv=None):
     args = parse_args(argv)
     if not args:
         exit(1)
-
+    config_filename = os.path.join(config.config_dir(),
+                                   confit.CONFIG_FILENAME)
+    if not os.path.exists(config_filename):
+        print('Missing configuration file %s' % config_filename)
     linkers = []
     for field in args['by']:
         linkers.append(Linker(field))
