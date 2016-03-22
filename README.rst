@@ -60,14 +60,14 @@ Configuration
     decade:
         dirs: true
         
-- `link_root_dir`: where the folders tree will be created. Must exit beforehand.
+- ``link_root_dir`` : where the folders tree will be created. Must exist beforehand.
 
 Then, you can define a section for each metadata you want to sort by.
 Available settings are :
 
-- `as`: dirname (or relative path from `link_root_dir`) where to grow the three
-- `link_format`: symlink format template
-- `dirs`: create [TO BE CONTINUED]
+- ``as`` : dirname (or relative path from ``link_root_dir``) where to grow the three
+- ``link_format`` : symlink format template
+- ``dirs``: create [TO BE CONTINUED]
 
 
 
