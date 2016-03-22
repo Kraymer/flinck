@@ -2,7 +2,7 @@
 =====================
 
      [flingk]
-      1. *verb tr., slang.* To create a symlink to a movie (flick)
+      1. *verb tr., slang.* To f*ckin create a symlink to a movie (flick)
 
 Description
 -----------
@@ -43,4 +43,31 @@ Usage
 
 Configuration
 -------------
+
+`~/.config/flinck/config.yaml` corresponding to the screenshot above : ::
+
+    link_root_dir: '/Volumes/Disque dur/Movies'    
+
+    genre:
+        dirs: true
+        buckets: true    
+
+    rating:
+        link_format: %rating-%year-%title
+        dirs: false
+        buckets: true    
+
+    decade:
+        dirs: true
+        
+- `link_root_dir`: where the folders tree will be created. Must exit beforehand.
+
+Then, you can define a section for each metadata you want to sort by.
+Available settings are :
+
+- `as`: dirname (or relative path from `link_root_dir`) where to grow the three
+- `link_format`: symlink format template
+- `dirs`: create [TO BE CONTINUED]
+
+
 
