@@ -44,7 +44,7 @@ Usage
 Configuration
 -------------
 
-`~/.config/flinck/config.yaml` corresponding to the screenshot above : ::
+``~/.config/flinck/config.yaml`` corresponding to the screenshot above : ::
 
     link_root_dir: '/Volumes/Disque dur/Movies'    
 
@@ -66,7 +66,7 @@ Then, you can define a section for each metadata you want to sort by.
 Available settings are :
 
 - ``as`` : dirname (or relative path from ``link_root_dir``) where to grow the three
-- ``link_format`` : symlink format template
+- ``link_format`` : symlink naming format
 - ``dirs``: create [TO BE CONTINUED]
 
 
