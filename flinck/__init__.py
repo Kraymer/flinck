@@ -27,10 +27,8 @@ def parse_args(argv):
         description='Organize your movie collection using symbolic links')
     parser.add_argument('media_src', metavar='FILE|DIR',
                         help='Media file or directory')
-    parser.add_argument('-l', '--link_dir', help='Links directory',
+    parser.add_argument('-l', '--link_dir', help='Links root directory',
                         dest='link_root_dir', required=(not root_defined))
-    parser.add_argument('-f', '--full-dir-scan', action='store_true',
-                        help='Link all files, not just the new ones')
     parser.add_argument('--by', choices=['country', 'director', 'decade',
                         'genre', 'rating', 'runtime', 'title', 'year'],
                         nargs='+',
