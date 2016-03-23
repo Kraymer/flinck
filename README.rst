@@ -2,7 +2,8 @@
 =====================
 
      [flingk]
-      1. *verb tr., slang.* To f*ckin create a symlink to a movie (flick)
+       *verb tr.* To create a symlink to a movie (flick)
+
 
 Description
 -----------
@@ -30,16 +31,6 @@ Usage
 
     Organize your movie collection using symbolic links
 
-    positional arguments:
-      FILE|DIR              Media file or directory
-
-    optional arguments:
-      -h, --help            show this help message and exit
-      -l LINK_DIR, --link_dir LINK_DIR
-                            Links directory
-      -f, --full-dir-scan   Link all files, not just the new ones
-      --by {country,director,decade,genre,rating,runtime,title,year} [{country,director,decade,genre,rating,runtime,title,year} ...]
-                            Organize medias by...
 
 Configuration
 -------------
@@ -59,15 +50,17 @@ Configuration
 
     decade:
         dirs: true
-        
-- ``link_root_dir`` : where the folders tree will be created. Must exist beforehand.
 
-Then, you can define a section for each metadata you want to sort by.
-Available settings are :
+Top settings:  
 
-- ``as`` : dirname (or relative path from ``link_root_dir``) where to grow the three
-- ``link_format`` : symlink naming format
-- ``dirs``: create [TO BE CONTINUED]
+- **link_root_dir**: where the folders tree will be created. Must exist beforehand.
+
+Then, you can define a section for each metadata field you want to sort by.  
+Inside it, available settings are :
+
+- **root**: root dirname (or relative path from ``link_root_dir``) for this metadata field. Default: the metadata field name.
+- **link_format**: symlink naming format. Default: `%title-%field`
+- **dirs**: yes/no/initial. Put symlinks into an intermediary directory named after the field value. Default: `no`
 
 
 
