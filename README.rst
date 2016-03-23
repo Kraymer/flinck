@@ -2,7 +2,8 @@
 =====================
 
      [flingk]
-      1. *verb tr., slang.* To create a symlink to a movie (flick)
+       *verb tr.* To create a symlink to a movie (flick)
+
 
 Description
 -----------
@@ -30,17 +31,38 @@ Usage
 
     Organize your movie collection using symbolic links
 
-    positional arguments:
-      FILE|DIR              Media file or directory
-
-    optional arguments:
-      -h, --help            show this help message and exit
-      -l LINK_DIR, --link_dir LINK_DIR
-                            Links directory
-      -f, --full-dir-scan   Link all files, not just the new ones
-      --by {country,director,decade,genre,rating,runtime,title,year} [{country,director,decade,genre,rating,runtime,title,year} ...]
-                            Organize medias by...
 
 Configuration
 -------------
+
+``~/.config/flinck/config.yaml`` corresponding to the screenshot above : ::
+
+    link_root_dir: '/Volumes/Disque dur/Movies'    
+
+    genre:
+        dirs: true
+        buckets: true    
+
+    rating:
+        link_format: %rating-%year-%title
+        dirs: false
+        buckets: true    
+
+    decade:
+        dirs: true
+
+Top settings:  
+
+- **link_root_dir**: where the folders tree will be created. Must exist beforehand.
+
+Then, you can define a section for each metadata field you want to sort by.  
+Inside it, available settings are :
+
+- **root**: root dirname (or relative path from ``link_root_dir``) for this metadata field. Default: the metadata field name.
+- **link_format**: symlink naming format. Default: ``%title-%field``
+- **dirs**: put symlinks into an intermediary directory named after the field value. Default: ``no``
+- **buckets**: put symlinks into a parent matching directory if it does exist. Any directory that contains the field value or defines a matching range is valid.  
+  A range is defined by ``[]`` chars, eg *[A-D]* directory matches *Drama* genre field value.
+
+
 
