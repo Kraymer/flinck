@@ -1,4 +1,5 @@
 #!/usr/bin/python
+# -*- coding: utf-8 -*-
 
 """IMDB movie searcher.
 """
@@ -29,22 +30,22 @@ def scrub(s, chars, new):
     for c in chars:
         if c in s:
             s = s.replace(c, new)
-    return s
+    return s.strip()
 
 
 def search_filename(fname):
     """Retrieve movie infos from filename.
     """
     res = re.split(r'|'.join(PATTERNS), os.path.basename(fname),
-                   flags=re.I)[0].strip()
-    res = scrub(res, '[({])}', ' ')
-    res = ' '.join([x for x in re.split(r'\W', res.strip()) if x])
+                   flags=re.I | re.U)[0].strip()
+    res = scrub(res, u'[({])}', u' ')
+    res = u' '.join([x for x in re.split(r'[\s\._]', res, flags=re.U) if x])
     years = re.findall(r'((?:19|20)\d\d)', res)
     if years:
         toks = re.split(r'(%s)' % years[-1], res)
     else:
         toks = [res]
-    title = toks[0].translate(None, '_')
+    title = toks[0]
     year = toks[1] if len(toks) > 1 else None
     if year:
         title += '(%s)' % year

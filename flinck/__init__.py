@@ -40,11 +40,11 @@ def parse_args(argv):
 
 def recursive_glob(treeroot, extensions):
     if not os.path.isdir(treeroot):
-        yield treeroot
+        yield unicode(treeroot, 'utf-8')
     for base, dirs, files in os.walk(treeroot):
         for f in files:
             if f.endswith(extensions):
-                yield os.path.join(base, f)
+                yield unicode(os.path.join(base, f), 'utf-8')
 
 
 def main(argv=None):
