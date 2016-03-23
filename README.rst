@@ -59,8 +59,8 @@ Then, you can define a section for each metadata field you want to sort by.
 Inside it, available settings are :
 
 - **root**: root dirname (or relative path from ``link_root_dir``) for this metadata field. Default: the metadata field name.
-- **link_format**: symlink naming format. Default: `%title-%field`
-- **dirs**: yes/no/initial. Put symlinks into an intermediary directory named after the field value. Default: `no`
+- **link_format**: symlink naming format. Default: ``%title-%field``
+- **dirs**: yes/no/initial. Put symlinks into an intermediary directory named after the field value. Default: ``no``
 
 
 
