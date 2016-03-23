@@ -60,7 +60,8 @@ Inside it, available settings are :
 
 - **root**: root dirname (or relative path from ``link_root_dir``) for this metadata field. Default: the metadata field name.
 - **link_format**: symlink naming format. Default: ``%title-%field``
-- **dirs**: yes/no/initial. Put symlinks into an intermediary directory named after the field value. Default: ``no``
+- **dirs**: put symlinks into an intermediary directory named after the field value. Default: ``no``
+- **buckets**: put symlinks into a parent matching directory if it does exist. Any directory that contains the field value or defines a matching range (as defined by ``[]`` chars, eg *Drama* value is matched by *[A-D]* directory) is valid.
 
 
 
