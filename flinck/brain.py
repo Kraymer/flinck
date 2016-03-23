@@ -69,6 +69,8 @@ def search_filename(fname):
                 item_dict[k] = 'Unknown'
         item_dict['title'] = title
         item_dict['genre'] = item['genre'][0]
+        item_dict['runtime'] = re.findall(r'\d+', item['runtime'][0]
+                                          )[0].zfill(3)
         item_dict['filename'] = fname
         item_dict['decade'] = str(item_dict['year'])[:-1] + '0s'
         return item_dict
