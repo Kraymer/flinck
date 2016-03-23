@@ -47,10 +47,11 @@ def search_filename(fname):
         toks = [res]
     title = toks[0]
     year = toks[1] if len(toks) > 1 else None
+    title_year = title
     if year:
-        title += '(%s)' % year
+        title_year += '(%s)' % year
     try:
-        items = imdb.search_movie(title)
+        items = imdb.search_movie(title_year)
     except imdb.IMDbError, e:
         print "Probably you're not connected to Internet. Error report: %s" % e
         sys.exit(3)
@@ -58,7 +59,7 @@ def search_filename(fname):
         item = items[0]
         imdb.update(item)
         item_dict = {}
-        for k in ('country', 'director', 'rating', 'runtime', 'title', 'year'):
+        for k in ('country', 'director', 'rating', 'runtime', 'year'):
             try:
                 if not isinstance(item[k], basestring):
                     item_dict[k] = str(item[k])
@@ -66,6 +67,7 @@ def search_filename(fname):
                     item_dict[k] = item[k]
             except KeyError:
                 item_dict[k] = 'Unknown'
+        item_dict['title'] = title
         item_dict['genre'] = item['genre'][0]
         item_dict['filename'] = fname
         item_dict['decade'] = str(item_dict['year'])[:-1] + '0s'
