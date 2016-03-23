@@ -56,7 +56,11 @@ def main(argv=None):
     config_filename = os.path.join(config.config_dir(),
                                    confit.CONFIG_FILENAME)
     if not os.path.exists(config_filename):
-        print('Missing configuration file %s' % config_filename)
+        print('Missing configuration file %s.' % config_filename)
+    if not os.path.exists(config['link_root_dir'].as_filename()):
+        print('Error: links root directory "%s" does not exist.' %
+              config['link_root_dir'])
+        exit(1)
     linkers = []
     for field in args['by']:
         linkers.append(Linker(field))
