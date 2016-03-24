@@ -29,16 +29,23 @@ def create_dir(link_dir):
         os.makedirs(link_dir)
 
 
-def belongs_to(val, link_dir):
-    """Return True if val belongs to the range defined by link_dir.
+def dircmp(val, link_dir):
+    """Return a positive distance if link_dir matches val or -1 if no match.
     """
-    if link_dir.endswith('-'):
-        return val < link_dir[:-1]
+    is_range = (link_dir[0] == '[') and (link_dir[-1] == ']'
+                                         ) and link_dir.count('-') == 1
+    link_dir = link_dir.strip('[]')
+    if val.startswith(link_dir):
+        return 0
     elif link_dir.endswith('+'):
-        return val > link_dir[:-1]
-    elif link_dir[1:-1].count('-') == 1:
+        if val > link_dir[:-1]:
+            return 1.0 / len(link_dir)
+    elif is_range:
         _min, _max = link_dir.split('-')
-        return _min <= val < _max
+        length = len(_min)
+        if (_min <= val[:length]) and (val[:length] <= _max):
+            return 0
+    return -1
 
 
 def find_bucket(parent_dir, val):
@@ -48,11 +55,15 @@ def find_bucket(parent_dir, val):
        name implied range.
     """
     candidates = glob(parent_dir + '/*/')
-    for c in [os.path.normpath(c) for c in candidates]:
-        if val.startswith(c):
-            return c
-        if (c[0] in '][' and c[-1] in '][') and belongs_to(val, c[1:-1]):
-            return c
+    bucket = None
+    min_distance = 99
+    for c in sorted([os.path.basename(c.strip(os.path.sep))
+                    for c in candidates], key=lambda x: x.strip('[]').lower()):
+        distance = dircmp(val.lower(), c.lower())
+        if 0 <= distance <= min_distance:
+            bucket = c
+            min_distance = distance
+    return bucket
 
 
 class Linker():
@@ -77,10 +88,8 @@ class Linker():
                                      self.link_format), item)
         link_dir, link_name = os.path.split(link_path)
         last_dir = ''
-        if self.dirs is True:
+        if self.dirs:
             last_dir = item[self.field]
-        elif self.dirs == 'initial':
-            last_dir = item[self.field][0]
         if self.buckets:
             bucket = find_bucket(link_dir, item[self.field])
             if not bucket:
