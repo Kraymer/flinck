@@ -24,13 +24,14 @@ Usage
 
 ::
 
-    usage: flinck.py [-h] [-l LINK_DIR] [-f] --by
+    usage: flinck.py [-h] [-l LINK_DIR] --by
                      {country,director,decade,genre,rating,runtime,title,year}
                      [{country,director,decade,genre,rating,runtime,title,year} ...]
                      FILE|DIR
 
     Organize your movie collection using symbolic links
 
+    Example: flinck ~/Movies --by genre rating
 
 Configuration
 -------------
