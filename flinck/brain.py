@@ -54,9 +54,10 @@ def search_filename(fname):
         title_year += '(%s)' % year
     try:
         items = imdb.search_movie(title_year)
-    except imdb.IMDbError, e:
+    except (imdb.IMDbError, imdb.IMDbDataAccessError), e:
         print "Probably you're not connected to Internet. Error report: %s" % e
-        sys.exit(3)
+        return
+
     if len(items) and (not year or (abs(items[0]['year'] - int(year))) <= 1):
         item = items[0]
         imdb.update(item)
@@ -71,8 +72,10 @@ def search_filename(fname):
                 item_dict[k] = 'Unknown'
         item_dict['title'] = title
         item_dict['genre'] = item['genre'][0]
+        item_dict['country'] = item['country'][0]
         item_dict['runtime'] = re.findall(r'\d+', item['runtime'][0]
                                           )[0].zfill(3)
+        item_dict['director'] = item['director'][0]['name']
         item_dict['filename'] = fname
         item_dict['decade'] = str(item_dict['year'])[:-1] + '0s'
         return item_dict
