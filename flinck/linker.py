@@ -102,6 +102,6 @@ class Linker():
 
         create_dir(link_dir)
         dest = os.path.join(link_dir, link_name)
-        if not os.path.exists(dest):
+        if not os.path.lexists(dest):
             print('Linking %s' % dest)
             os.symlink(item['filename'], dest)
