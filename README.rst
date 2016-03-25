@@ -19,6 +19,20 @@ Features
 - sane limited set of configuration options, yet highly flexible directories resulting structure
 - possible to split links into alphabetical buckets (A-C, D-F, etc) for large libraries
 
+Install
+-------
+
+flinck is written for `Python 2.7`_.
+
+Install with `pip`_ via ``pip install flinck`` command.
+
+If you're on Windows and don't have pip yet, follow
+`this guide`_ to install it.
+
+.. _Python 2.7: ttps://www.python.org/downloads/
+.. _pip: https://pip.pypa.io/en/stable/
+.. _this guide: https://pip.pypa.io/en/latest/installing/
+
 Usage
 -----
 
@@ -64,6 +78,8 @@ Inside it, available settings are :
 - **dirs**: put symlinks into an intermediary directory named after the field value. Default: ``no``
 - **buckets**: put symlinks into a parent matching directory if it does exist. Any directory that contains the field value or defines a matching range is valid.  
   A range is defined by ``[]`` chars, eg *[A-D]* directory matches *Drama* genre field value.
+  
+  
 
 
 
