@@ -6,20 +6,20 @@
 
 import os
 import re
-import sys
 
 from imdb import IMDb
 
 # Regex to extract title and year. Should work as long as they are at the
 # beginning and in that order.
-PATTERNS = [r'\W%s(?:\W|$)' % x for x in ('dvdrip', 'vost\w+', '1080p',
+FNAME_SPLIT_RE = r'|'.join(['\W%s(?:\W|$)' % x
+    for x in ('dvdrip', 'vost\w+', '1080p',
         '720p', 'multi',
-         '[\(\[]\D+[\)\]]',  # parentheses
-         'bluray', 'x264', 'ac3',  # format
-         'b[dr]rip', 'xvid', 'divx', 'fansub',
-         'S\d+(E\d+)?',  # seasons
-         '(true)?french',  # langs
-         'avi', 'mkv')]
+        '[\(\[]\D+[\)\]]',  # parentheses
+        'bluray', 'x264', 'ac3',  # format
+        'b[dr]rip', 'xvid', 'divx', 'fansub',
+        'S\d+(E\d+)?',  # seasons
+        '(true)?french',  # langs
+        'avi', 'mkv')])
 
 imdb = IMDb()
 
@@ -36,7 +36,9 @@ def scrub(s, chars, new):
 def search_filename(fname):
     """Retrieve movie infos from filename.
     """
-    res = re.split(r'|'.join(PATTERNS), os.path.basename(fname),
+    if os.path.basename(fname).lower().startswith('sample'):
+        return
+    res = re.split(FNAME_SPLIT_RE, os.path.basename(fname),
                    flags=re.I | re.U)[0].strip()
     res = scrub(res, u'[({])}', u' ')
     res = u' '.join([x for x in re.split(r'[\s\._]', res, flags=re.U) if x])
