@@ -15,6 +15,9 @@ import brain
 from config import config
 from linker import Linker
 
+__version__ = '0.1.1'
+__author__ = 'Fabrice Laporte <kraymer@gmail.com>'
+
 
 def parse_args(argv):
     """Build application argument parser and parse command line.
