@@ -8,15 +8,12 @@
 import argparse
 import os
 import sys
-import confit
 
+import confit
 import brain
 
 from config import config
 from linker import Linker
-
-__version__ = '0.1.0'
-__author__ = 'Fabrice Laporte <kraymer@gmail.com>'
 
 
 def parse_args(argv):

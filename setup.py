@@ -10,7 +10,8 @@ import re
 
 from setuptools import setup
 
-from flinck import __version__
+__version__ = '0.1.3'
+__author__ = 'Fabrice Laporte <kraymer@gmail.com>'
 
 
 def yield_sphinx_only_markup(lines):
