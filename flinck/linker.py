@@ -70,10 +70,10 @@ class Linker():
     def __init__(self, name):
         self.field = name
         self.config = config[name]
-        self.config.add({'link_rel_dir': self.field,
+        self.config.add({'root': self.field,
                         'dirs': False,
                         'buckets': False})
-        self.link_rel_dir = self.config['link_rel_dir'].get()
+        self.root = self.config['root'].get()
         self.dirs = self.config['dirs'].get()
         self.buckets = self.config['buckets'].get()
         default_link_format = '%s%s%s' % (
@@ -84,7 +84,7 @@ class Linker():
         self.link_format = self.config['link_format'].get()
 
     def flink(self, item):
-        link_path = resolve_template(os.path.join(self.link_rel_dir,
+        link_path = resolve_template(os.path.join(self.root,
                                      self.link_format), item)
         link_dir, link_name = os.path.split(link_path)
         last_dir = ''
