@@ -85,7 +85,7 @@ setup(name='flinck',
         ],
     },
 
-    install_requires=[],
+    install_requires=['imdbpy', 'pyyaml'],
 
     classifiers=[
         'License :: OSI Approved :: MIT License',
