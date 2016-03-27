@@ -47,7 +47,9 @@ Usage
 
     Example: flinck ~/Movies --by genre rating
 
-More infos on [Wiki](https://github.com/Kraymer/flinck/wiki)
+More infos on `Wiki`_
+
+.. _Wiki: https://github.com/Kraymer/flinck/wiki
 
 Configuration
 -------------
