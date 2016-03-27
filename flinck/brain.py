@@ -4,10 +4,12 @@
 """IMDB movie searcher.
 """
 
+from __future__ import print_function
+
 import os
 import re
 
-from imdb import IMDb
+import omdb
 
 # Regex to extract title and year. Should work as long as they are at the
 # beginning and in that order.
@@ -20,8 +22,6 @@ FNAME_SPLIT_RE = r'|'.join(['\W%s(?:\W|$)' % x
         'S\d+(E\d+)?',  # seasons
         '(true)?french',  # langs
         'avi', 'mkv')])
-
-imdb = IMDb()
 
 
 def scrub(s, chars, new):
@@ -40,42 +40,30 @@ def search_filename(fname):
         return
     res = re.split(FNAME_SPLIT_RE, os.path.basename(fname),
                    flags=re.I | re.U)[0].strip()
-    res = scrub(res, u'[({])}', u' ')
-    res = u' '.join([x for x in re.split(r'[\s\._]', res, flags=re.U) if x])
+    res = scrub(res, '[({])}', ' ')
+    res = ' '.join([x for x in re.split(r'[\s\._]', res, flags=re.U) if x])
     years = re.findall(r'((?:19|20)\d\d)', res)
     if years:
         toks = re.split(r'(%s)' % years[-1], res)
     else:
         toks = [res]
-    title = toks[0]
     year = toks[1] if len(toks) > 1 else None
-    title_year = title
+    query = {'fullplot': False, 'tomatoes': False, 'title': toks[0]}
     if year:
-        title_year += '(%s)' % year
-    try:
-        items = imdb.search_movie(title_year)
-    except (imdb.IMDbError, imdb.IMDbDataAccessError), e:
-        print "Probably you're not connected to Internet. Error report: %s" % e
-        return
-
-    if len(items) and (not year or (abs(items[0]['year'] - int(year))) <= 1):
-        item = items[0]
-        imdb.update(item)
-        item_dict = {}
-        for k in ('country', 'director', 'rating', 'runtime', 'year'):
-            try:
-                if not isinstance(item[k], basestring):
-                    item_dict[k] = str(item[k])
-                else:
-                    item_dict[k] = item[k]
-            except KeyError:
-                item_dict[k] = 'Unknown'
-        item_dict['title'] = title
-        item_dict['genre'] = item['genre'][0]
-        item_dict['country'] = item['country'][0]
-        item_dict['runtime'] = re.findall(r'\d+', item['runtime'][0]
-                                          )[0].zfill(3)
-        item_dict['director'] = item['director'][0]['name']
-        item_dict['filename'] = fname
-        item_dict['decade'] = str(item_dict['year'])[:-1] + '0s'
-        return item_dict
+        query['year'] = year
+    print("Query: %s" % query)
+    item = omdb.get(**query)
+    if item:
+        for k in item:
+            if item[k] == 'N/A':
+                item[k] = 'Unknown'
+        item['country'] = item['country'].split(',')[0]
+        item['director'] = item['director'].replace(', ', ' and ')
+        item['genre'] = item['genre'].split(',')[0]
+        item['runtime'] = re.findall(r'\d+', item['runtime']
+                                     )[0].zfill(3) + ' min'
+        item['filename'] = fname
+        item['decade'] = item['year'].strip('-')[:-1] + '0s'
+        item['rating'] = item.pop('imdb_rating')
+        return item
+    # exit(1)

@@ -9,11 +9,11 @@ import argparse
 import os
 import sys
 
-import confit
-import brain
+from . import confit
+from . import brain
 
-from config import config
-from linker import Linker
+from .config import config
+from .linker import Linker
 
 __version__ = '0.1.2'
 __author__ = 'Fabrice Laporte <kraymer@gmail.com>'
@@ -43,11 +43,11 @@ def parse_args(argv):
 
 def recursive_glob(treeroot, extensions):
     if not os.path.isdir(treeroot):
-        yield unicode(treeroot, 'utf-8')
+        yield treeroot
     for base, dirs, files in os.walk(treeroot):
         for f in files:
             if f.endswith(extensions):
-                yield unicode(os.path.join(base, f), 'utf-8')
+                yield os.path.join(base, f)
 
 
 def main(argv=None):
@@ -59,10 +59,10 @@ def main(argv=None):
     config_filename = os.path.join(config.config_dir(),
                                    confit.CONFIG_FILENAME)
     if not os.path.exists(config_filename):
-        print('Missing configuration file %s.' % config_filename)
+        print(('Missing configuration file %s.' % config_filename))
     if not os.path.exists(config['link_root_dir'].as_filename()):
-        print('Error: links root directory "%s" does not exist.' %
-              config['link_root_dir'])
+        print(('Error: links root directory "%s" does not exist.' %
+              config['link_root_dir']))
         exit(1)
     linkers = []
     for field in args['by']:
@@ -73,7 +73,7 @@ def main(argv=None):
             for l in linkers:
                 l.flink(item)
         else:
-            print 'No imdb matching for %s' % f
+            print(('No imdb matching for %s' % f))
 
 if __name__ == "__main__":
     sys.exit(main())

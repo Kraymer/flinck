@@ -3,12 +3,13 @@
 """Linkers are in charge of creating symlinks for one of the tree branches.
 """
 
+from __future__ import print_function
+
 import re
 import os
-
 from glob import glob
 
-from config import config
+from .config import config
 
 
 def resolve_template(template, item):

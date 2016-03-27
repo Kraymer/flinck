@@ -48,7 +48,7 @@ def yield_sphinx_only_markup(lines):
             for (regex, sub) in regex_subs:
                 line = regex.sub(sub, line)
         except Exception as ex:
-            print("ERROR: %s, (line(%s)" % (regex, sub))
+            print(("ERROR: %s, (line(%s)" % (regex, sub)))
             raise ex
 
         return line
@@ -76,7 +76,6 @@ setup(name='flinck',
     url='https://github.com/KraYmer/flinck',
     license='MIT',
     platforms='ALL',
-
     packages=['flinck', ],
 
     entry_points={
@@ -84,9 +83,7 @@ setup(name='flinck',
             'flinck = flinck:main',
         ],
     },
-
-    install_requires=['imdbpy', 'pyyaml'],
-
+    install_requires=['omdb', 'pyyaml'],
     classifiers=[
         'License :: OSI Approved :: MIT License',
         'Programming Language :: Python',
