@@ -38,7 +38,13 @@ def parse_args(argv):
                         required=True, help='Organize medias by...')
     args = parser.parse_args(args=argv[1:])
     config.set_args(args)
-    return vars(args)
+    args = vars(args)
+    try:
+        args['media_src'] = unicode(args['media_src'], "utf-8",
+                                    errors="ignore")
+    except Exception:
+        pass  # py3
+    return args
 
 
 def recursive_glob(treeroot, extensions):
