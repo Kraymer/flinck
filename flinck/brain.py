@@ -8,6 +8,7 @@ from __future__ import print_function
 
 import os
 import re
+from unidecode import unidecode
 
 import omdb
 
@@ -68,7 +69,7 @@ def search_filename(fname, fields):
             toks = re.split(r'(%s)' % years[-1], res)
         else:
             toks = [res]
-        title = toks[0].strip()
+        title = unidecode(toks[0].strip())
         year = toks[1] if len(toks) > 1 else None
         query = {'fullplot': False, 'tomatoes': False, 'title': title}
         if year:
