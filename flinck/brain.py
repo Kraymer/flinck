@@ -4,10 +4,13 @@
 """IMDB movie searcher.
 """
 
+from __future__ import print_function
+
 import os
 import re
+from unidecode import unidecode
 
-from imdb import IMDb
+import omdb
 
 # Regex to extract title and year. Should work as long as they are at the
 # beginning and in that order.
@@ -20,8 +23,7 @@ FNAME_SPLIT_RE = r'|'.join(['\W%s(?:\W|$)' % x
         'S\d+(E\d+)?',  # seasons
         '(true)?french',  # langs
         'avi', 'mkv')])
-
-imdb = IMDb()
+CACHED_RESULTS = {}
 
 
 def scrub(s, chars, new):
@@ -33,49 +35,53 @@ def scrub(s, chars, new):
     return s.strip()
 
 
-def search_filename(fname):
+def format_field(item, field):
+    if item.get(field, None) == 'N/A':
+        item[field] = 'Unknown'
+    else:
+        try:
+            if field in ('country', 'genre'):
+                item[field] = item[field].split(',')[0]
+            elif field == 'director':
+                item[field] = item[field].replace(', ', ' and ')
+            elif field == 'runtime':
+                item[field] = re.findall(r'\d+', item['runtime']
+                                         )[0].zfill(3) + ' min'
+            elif field == 'decade':
+                item['decade'] = item['decade'].strip('-')[:-1] + '0s'
+            elif field == 'rating':
+                item['rating'] = item.pop('imdb_rating')
+        except Exception:
+            item[field] = 'Unknown'
+
+
+def search_filename(fname, fields):
     """Retrieve movie infos from filename.
     """
-    if os.path.basename(fname).lower().startswith('sample'):
-        return
-    res = re.split(FNAME_SPLIT_RE, os.path.basename(fname),
-                   flags=re.I | re.U)[0].strip()
-    res = scrub(res, u'[({])}', u' ')
-    res = u' '.join([x for x in re.split(r'[\s\._]', res, flags=re.U) if x])
-    years = re.findall(r'((?:19|20)\d\d)', res)
-    if years:
-        toks = re.split(r'(%s)' % years[-1], res)
-    else:
-        toks = [res]
-    title = toks[0]
-    year = toks[1] if len(toks) > 1 else None
-    title_year = title
-    if year:
-        title_year += '(%s)' % year
-    try:
-        items = imdb.search_movie(title_year)
-    except (imdb.IMDbError, imdb.IMDbDataAccessError), e:
-        print "Probably you're not connected to Internet. Error report: %s" % e
-        return
-
-    if len(items) and (not year or (abs(items[0]['year'] - int(year))) <= 1):
-        item = items[0]
-        imdb.update(item)
-        item_dict = {}
-        for k in ('country', 'director', 'rating', 'runtime', 'year'):
-            try:
-                if not isinstance(item[k], basestring):
-                    item_dict[k] = str(item[k])
-                else:
-                    item_dict[k] = item[k]
-            except KeyError:
-                item_dict[k] = 'Unknown'
-        item_dict['title'] = title
-        item_dict['genre'] = item['genre'][0]
-        item_dict['country'] = item['country'][0]
-        item_dict['runtime'] = re.findall(r'\d+', item['runtime'][0]
-                                          )[0].zfill(3)
-        item_dict['director'] = item['director'][0]['name']
-        item_dict['filename'] = fname
-        item_dict['decade'] = str(item_dict['year'])[:-1] + '0s'
-        return item_dict
+    path_tokens = os.path.normpath(fname).split(os.sep)
+    for candidate in (path_tokens[-1], path_tokens[-2]):
+        res = re.split(FNAME_SPLIT_RE, candidate,
+                       flags=re.I | re.U)[0].strip()
+        res = scrub(res, '[({])}', ' ')
+        res = ' '.join([x for x in re.split(r'[\s\._]', res, flags=re.U) if x])
+        years = re.findall(r'((?:19|20)\d\d)', res)
+        if years:
+            toks = re.split(r'(%s)' % years[-1], res)
+        else:
+            toks = [res]
+        title = unidecode(toks[0].strip())
+        year = toks[1] if len(toks) > 1 else None
+        query = {'fullplot': False, 'tomatoes': False, 'title': title}
+        if year:
+            query['year'] = year
+        if (title, year) in CACHED_RESULTS:
+            item = CACHED_RESULTS[(title, year)]
+        else:
+            item = omdb.get(**query)
+            if item:
+                for f in fields:
+                    format_field(item, f)
+            CACHED_RESULTS[(title, year)] = item
+        if item:
+            item['filename'] = fname
+            return item
