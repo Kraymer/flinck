@@ -22,6 +22,7 @@ FNAME_SPLIT_RE = r'|'.join(['\W%s(?:\W|$)' % x
         'S\d+(E\d+)?',  # seasons
         '(true)?french',  # langs
         'avi', 'mkv')])
+CACHED_RESULTS = {}
 
 
 def scrub(s, chars, new):
@@ -33,37 +34,53 @@ def scrub(s, chars, new):
     return s.strip()
 
 
-def search_filename(fname):
+def format_field(item, field):
+    if item.get(field, None) == 'N/A':
+        item[field] = 'Unknown'
+    else:
+        try:
+            if field in ('country', 'genre'):
+                item[field] = item[field].split(',')[0]
+            elif field == 'director':
+                item[field] = item[field].replace(', ', ' and ')
+            elif field == 'runtime':
+                item[field] = re.findall(r'\d+', item['runtime']
+                                         )[0].zfill(3) + ' min'
+            elif field == 'decade':
+                item['decade'] = item['decade'].strip('-')[:-1] + '0s'
+            elif field == 'rating':
+                item['rating'] = item.pop('imdb_rating')
+        except Exception:
+            item[field] = 'Unknown'
+
+
+def search_filename(fname, fields):
     """Retrieve movie infos from filename.
     """
-    if os.path.basename(fname).lower().startswith('sample'):
-        return
-    res = re.split(FNAME_SPLIT_RE, os.path.basename(fname),
-                   flags=re.I | re.U)[0].strip()
-    res = scrub(res, '[({])}', ' ')
-    res = ' '.join([x for x in re.split(r'[\s\._]', res, flags=re.U) if x])
-    years = re.findall(r'((?:19|20)\d\d)', res)
-    if years:
-        toks = re.split(r'(%s)' % years[-1], res)
-    else:
-        toks = [res]
-    year = toks[1] if len(toks) > 1 else None
-    query = {'fullplot': False, 'tomatoes': False, 'title': toks[0]}
-    if year:
-        query['year'] = year
-    print("Query: %s" % query)
-    item = omdb.get(**query)
-    if item:
-        for k in item:
-            if item[k] == 'N/A':
-                item[k] = 'Unknown'
-        item['country'] = item['country'].split(',')[0]
-        item['director'] = item['director'].replace(', ', ' and ')
-        item['genre'] = item['genre'].split(',')[0]
-        item['runtime'] = re.findall(r'\d+', item['runtime']
-                                     )[0].zfill(3) + ' min'
-        item['filename'] = fname
-        item['decade'] = item['year'].strip('-')[:-1] + '0s'
-        item['rating'] = item.pop('imdb_rating')
-        return item
-    # exit(1)
+    path_tokens = os.path.normpath(fname).split(os.sep)
+    for candidate in (path_tokens[-1], path_tokens[-2]):
+        res = re.split(FNAME_SPLIT_RE, candidate,
+                       flags=re.I | re.U)[0].strip()
+        res = scrub(res, '[({])}', ' ')
+        res = ' '.join([x for x in re.split(r'[\s\._]', res, flags=re.U) if x])
+        years = re.findall(r'((?:19|20)\d\d)', res)
+        if years:
+            toks = re.split(r'(%s)' % years[-1], res)
+        else:
+            toks = [res]
+        title = toks[0].strip()
+        year = toks[1] if len(toks) > 1 else None
+        query = {'fullplot': False, 'tomatoes': False, 'title': title}
+        if year:
+            query['year'] = year
+        if (title, year) in CACHED_RESULTS:
+            item = CACHED_RESULTS[(title, year)]
+        else:
+            item = omdb.get(**query)
+            if item:
+                for f in fields:
+                    format_field(item, f)
+            CACHED_RESULTS[(title, year)] = item
+        if item:
+            item['filename'] = fname
+            return item
