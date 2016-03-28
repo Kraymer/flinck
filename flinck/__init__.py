@@ -68,7 +68,9 @@ def main(argv=None):
     for field in args['by']:
         linkers.append(Linker(field))
     for f in recursive_glob(args['media_src'], ('.avi', '.mp4')):
-        item = brain.search_filename(f)
+        if os.path.getsize(f) < 20971520:
+            continue
+        item = brain.search_filename(f, args['by'])
         if item:
             for l in linkers:
                 l.flink(item)
