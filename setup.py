@@ -5,10 +5,7 @@
 # The MIT License http://www.opensource.org/licenses/mit-license.php
 
 import os
-import sys
 import re
-
-from flinck import __version__
 
 from setuptools import setup
 
@@ -57,18 +54,21 @@ def yield_sphinx_only_markup(lines):
         yield clean_line(line)
 
 
-def publish():
-    """Publish to PyPi"""
-    os.system("python setup.py sdist upload")
+def version():
+    path = os.path.join(os.path.dirname(__file__), 'flinck', '__init__.py')
+    with open(path) as f:
+        for line in f:
+            tokens = line.split('__version__ = ')
+            if len(tokens) > 1:
+                return tokens[1].strip("' \n")
+        else:
+            print('No version defined')
+            exit(1)
 
-
-if sys.argv[-1] == "publish":
-    publish()
-    sys.exit()
 
 readme_lines = open('README.rst').readlines()
 setup(name='flinck',
-    version=__version__,
+    version=version(),
     description='Sort your movies on filesystem using symlinks.',
     long_description=''.join(yield_sphinx_only_markup(readme_lines)),
     author='Fabrice Laporte',
