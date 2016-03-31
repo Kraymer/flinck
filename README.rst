@@ -1,6 +1,5 @@
 .. image:: https://raw.githubusercontent.com/Kraymer/flinck/master/docs/_static/logo.png
 
-=====
 
      [flingk]
        *verb tr.* To create a symlink to a movie (flick)
