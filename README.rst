@@ -24,13 +24,14 @@ Install
 -------
 
 flinck is written for `Python 2.7`_ and `Python 3`_.
+
 Install with `pip`_ via ``pip install flinck`` command.
 
 If you're on Windows and don't have pip yet, follow
 `this guide`_ to install it.
 
-.. _Python 2.7: ttps://www.python.org/downloads/
-.. _Python 3: ttps://www.python.org/downloads/
+.. _Python 2.7: https://www.python.org/downloads/
+.. _Python 3: https://www.python.org/downloads/
 .. _pip: https://pip.pypa.io/en/stable/
 .. _this guide: https://pip.pypa.io/en/latest/installing/
 
