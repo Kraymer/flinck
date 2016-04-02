@@ -5,6 +5,8 @@
     Flinck: Finger lickin good flicks linker.
 """
 
+from __future__ import print_function
+
 import argparse
 import os
 import sys
@@ -82,17 +84,19 @@ def main(argv=None):
     config_filename = os.path.join(config.config_dir(),
                                    confit.CONFIG_FILENAME)
     if not os.path.exists(config_filename):
-        print(('Missing configuration file %s.' % config_filename))
+        print('Missing configuration file %s.' % config_filename)
     if not os.path.exists(config['link_root_dir'].as_filename()):
-        print(('Error: links root directory "%s" does not exist.' %
-              config['link_root_dir']))
+        print('Error: links root directory "%s" does not exist.' %
+              config['link_root_dir'])
         exit(1)
     linkers = [Linker(field) for field in args['by']]
+    for fpath in recursive_glob(args['media_src']):
+        item = brain.search_filename(fpath, args['by'])
         if item:
-            for l in linkers:
-                l.flink(item)
+            for linker in linkers:
+                linker.flink(item)
         else:
-            print(('No imdb matching for %s' % f))
+            print('No Open Movie Database matching for %s' % fpath)
 
 if __name__ == "__main__":
     sys.exit(main())
