@@ -28,14 +28,25 @@ def parse_args(argv):
         root_defined = False
     parser = argparse.ArgumentParser(
         description='Organize your movie collection using symbolic links')
-    parser.add_argument('media_src', metavar='FILE|DIR',
-                        help='Media file or directory')
-    parser.add_argument('-l', '--link_dir', help='Links root directory',
-                        dest='link_root_dir', required=(not root_defined))
-    parser.add_argument('--by', choices=['country', 'director', 'decade',
+    parser.add_argument('media_src',
+                        metavar='FILE|DIR',
+                        help='media file or directory')
+    parser.add_argument('-l', '--link_dir',
+                        help='links root directory',
+                        dest='link_root_dir',
+                        required=(not root_defined))
+    parser.add_argument('--by',
+                        choices=['country', 'director', 'decade',
                         'genre', 'rating', 'runtime', 'title', 'year'],
                         nargs='+',
-                        required=True, help='Organize medias by...')
+                        metavar='FIELD1 FIELD2',
+                        required=True,
+                        help=('organize medias by...\n'
+                              'Possible fields: {%(choices)s}'))
+    parser.add_argument('--version',
+                        action='version',
+                        version='%(prog)s ' + __version__,
+                        help='display version information and exit')
     args = parser.parse_args(args=argv[1:])
     config.set_args(args)
     args = vars(args)
