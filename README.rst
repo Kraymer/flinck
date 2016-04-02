@@ -74,6 +74,8 @@ Configuration
 Top settings:  
 
 - **link_root_dir**: where the folders tree will be created. Must exist beforehand.
+- **file_extensions**: files types to consider. Default: ``['avi', 'm4v', 'mkv', 'mp4']``
+- **file_min_size_mb**: files whose size is below that threshold are ignored. Default: ``20``
 
 Then, you can define a section for each metadata field you want to sort by.  
 Inside it, available settings are :
