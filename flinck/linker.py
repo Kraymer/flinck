@@ -44,7 +44,7 @@ def dircmp(val, link_dir):
     elif is_range:
         _min, _max = link_dir.split('-')
         length = len(_min)
-        if (_min <= val[:length]) and (val[:length] <= _max):
+        if _min <= val[:length] <= _max:
             return 0
     return -1
 
