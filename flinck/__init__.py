@@ -58,13 +58,21 @@ def parse_args(argv):
     return args
 
 
-def recursive_glob(treeroot, extensions):
-    if not os.path.isdir(treeroot):
+def recursive_glob(treeroot):
+    """Browse folders hierarchy and yield files with
+    """
+    min_size = config['file_min_size_mb'].get() * 1024 * 1024
+
+    def is_video_file_candidate(path):
+        return (path.endswith(tuple(config['file_extensions'].get())) and
+                os.path.getsize(path) > min_size)
+
+    if not os.path.isdir(treeroot) and is_video_file_candidate(treeroot):
         yield treeroot
-    for base, dirs, files in os.walk(treeroot):
-        for f in files:
-            if f.endswith(extensions):
-                yield os.path.join(base, f)
+    for base, _, files in os.walk(treeroot):
+        for fpath in files:
+            if is_video_file_candidate(fpath):
+                yield os.path.join(base, fpath)
 
 
 def main(argv=None):
@@ -80,10 +88,6 @@ def main(argv=None):
               config['link_root_dir']))
         exit(1)
     linkers = [Linker(field) for field in args['by']]
-    for f in recursive_glob(args['media_src'], ('.avi', '.mp4')):
-        if os.path.getsize(f) < 20971520:
-            continue
-        item = brain.search_filename(f, args['by'])
         if item:
             for l in linkers:
                 l.flink(item)
