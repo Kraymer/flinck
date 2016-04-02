@@ -57,9 +57,7 @@ def recursive_glob(treeroot, extensions):
 
 
 def main(argv=None):
-    if argv is None:
-        argv = sys.argv
-    args = parse_args(argv)
+    args = parse_args(argv or sys.argv)
     if not args:
         exit(1)
     config_filename = os.path.join(config.config_dir(),
@@ -70,9 +68,7 @@ def main(argv=None):
         print(('Error: links root directory "%s" does not exist.' %
               config['link_root_dir']))
         exit(1)
-    linkers = []
-    for field in args['by']:
-        linkers.append(Linker(field))
+    linkers = [Linker(field) for field in args['by']]
     for f in recursive_glob(args['media_src'], ('.avi', '.mp4')):
         if os.path.getsize(f) < 20971520:
             continue
