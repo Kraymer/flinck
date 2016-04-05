@@ -14,25 +14,25 @@ import omdb
 
 # Regex to extract title and year. Should work as long as they are at the
 # beginning and in that order.
-FNAME_SPLIT_RE = r'|'.join(['\W%s(?:\W|$)' % x
-    for x in ('dvdrip', 'vost\w+', '1080p',
-        '720p', 'multi',
-        '[\(\[]\D+[\)\]]',  # parentheses
-        'bluray', 'x264', 'ac3',  # format
-        'b[dr]rip', 'xvid', 'divx', 'fansub',
-        'S\d+(E\d+)?',  # seasons
-        '(true)?french',  # langs
-        'avi', 'mkv')])
+FNAME_SPLIT_RE = '|'.join([r'\W%s(?:\W|$)' % x
+                           for x in ('dvdrip', r'vost\w+', '1080p',
+                                     '720p', 'multi',
+                                     r'[\(\[]\D+[\)\]]',  # parentheses
+                                     'bluray', 'x264', 'ac3',  # format
+                                     r'b[dr]rip', 'xvid', 'divx', 'fansub',
+                                     r'S\d+(E\d+)?',  # seasons
+                                     r'(true)?french',  # langs
+                                     'avi', 'mkv')])
 CACHED_RESULTS = {}
 
 
-def scrub(s, chars, new):
+def scrub(text, chars, new):
     """Replace chars.
     """
-    for c in chars:
-        if c in s:
-            s = s.replace(c, new)
-    return s.strip()
+    for char in chars:
+        if char in text:
+            text = text.replace(char, new)
+    return text.strip()
 
 
 def format_field(item, field):
@@ -79,8 +79,8 @@ def search_filename(fname, fields):
         else:
             item = omdb.get(**query)
             if item:
-                for f in fields:
-                    format_field(item, f)
+                for field in fields:
+                    format_field(item, field)
             CACHED_RESULTS[(title, year)] = item
         if item:
             item['filename'] = fname
