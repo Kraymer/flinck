@@ -74,8 +74,9 @@ def recursive_glob(treeroot):
         yield treeroot
     for base, _, files in os.walk(treeroot):
         for fpath in files:
-            if is_video_file_candidate(fpath):
-                yield os.path.join(base, fpath)
+            abs_path = os.path.join(base, fpath)
+            if is_video_file_candidate(abs_path):
+                yield abs_path
 
 
 def main(argv=None):
