@@ -20,6 +20,17 @@ from .linker import Linker
 __version__ = '0.2.0'
 __author__ = 'Fabrice Laporte <kraymer@gmail.com>'
 
+FIELDS = ('country', 'director', 'decade', 'genre', 'rating', 'runtime',
+    'title', 'year')
+
+
+def to_unicode(text):
+    try:
+        return unicode(text, "utf-8", errors="ignore")
+    except NameError:
+        pass  # Python3, no conversion needed
+    return text
+
 
 def parse_args(argv):
     """Build application argument parser and parse command line.
@@ -28,21 +39,25 @@ def parse_args(argv):
         root_defined = config['link_root_dir'].get()
     except confit.NotFoundError:
         root_defined = False
+    config_by_fields = set(config.keys()).intersection(FIELDS)
+
     parser = argparse.ArgumentParser(
-        description='Organize your movie collection using symbolic links')
+        description='Organize your movie collection using symbolic links',
+        epilog='Example: flinck ~/Movies --by genre rating',)
     parser.add_argument('media_src',
                         metavar='FILE|DIR',
-                        help='media file or directory')
+                        help='media file or directory',
+                        type=to_unicode)
     parser.add_argument('-l', '--link_dir',
                         help='links root directory',
                         dest='link_root_dir',
                         required=(not root_defined))
     parser.add_argument('--by',
-                        choices=['country', 'director', 'decade',
-                        'genre', 'rating', 'runtime', 'title', 'year'],
+                        choices=FIELDS,
                         nargs='+',
                         metavar='FIELD1 FIELD2',
-                        required=True,
+                        default=config_by_fields,
+                        required=(not config_by_fields),
                         help=('organize medias by...\n'
                               'Possible fields: {%(choices)s}'))
     parser.add_argument('--version',
@@ -51,13 +66,7 @@ def parse_args(argv):
                         help='display version information and exit')
     args = parser.parse_args(args=argv[1:])
     config.set_args(args)
-    args = vars(args)
-    try:
-        args['media_src'] = unicode(args['media_src'], "utf-8",
-                                    errors="ignore")
-    except Exception:
-        pass  # py3
-    return args
+    return vars(args)
 
 
 def recursive_glob(treeroot):
@@ -73,8 +82,9 @@ def recursive_glob(treeroot):
         yield treeroot
     for base, _, files in os.walk(treeroot):
         for fpath in files:
-            if is_video_file_candidate(fpath):
-                yield os.path.join(base, fpath)
+            abs_path = os.path.join(base, fpath)
+            if is_video_file_candidate(abs_path):
+                yield abs_path
 
 
 def main(argv=None):
