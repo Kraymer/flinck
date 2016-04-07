@@ -20,6 +20,10 @@ from .linker import Linker
 __version__ = '0.2.0'
 __author__ = 'Fabrice Laporte <kraymer@gmail.com>'
 
+FIELDS = ('country', 'director', 'decade', 'genre', 'rating', 'runtime',
+    'title', 'year')
+
+
 def to_unicode(text):
     try:
         return unicode(text, "utf-8", errors="ignore")
@@ -35,6 +39,8 @@ def parse_args(argv):
         root_defined = config['link_root_dir'].get()
     except confit.NotFoundError:
         root_defined = False
+    config_by_fields = set(config.keys()).intersection(FIELDS)
+
     parser = argparse.ArgumentParser(
         description='Organize your movie collection using symbolic links',
         epilog='Example: flinck ~/Movies --by genre rating',)
@@ -47,11 +53,11 @@ def parse_args(argv):
                         dest='link_root_dir',
                         required=(not root_defined))
     parser.add_argument('--by',
-                        choices=['country', 'director', 'decade',
-                        'genre', 'rating', 'runtime', 'title', 'year'],
+                        choices=FIELDS,
                         nargs='+',
                         metavar='FIELD1 FIELD2',
-                        required=True,
+                        default=config_by_fields,
+                        required=(not config_by_fields),
                         help=('organize medias by...\n'
                               'Possible fields: {%(choices)s}'))
     parser.add_argument('--version',
