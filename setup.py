@@ -14,6 +14,9 @@ def yield_sphinx_only_markup(lines):
     """http://stackoverflow.com/a/25900928/5181
        Cleans-up Sphinx-only constructs (ie from README.rst),
        so that *PyPi* can format it properly.
+       To check for remaining errors, install ``sphinx`` and run::
+       python setup.py --long-description | sed -file 'this_file.sed' | rst2html.py  --halt=warning
+
     """
     substs = [
         # Selected Sphinx-only Roles.
@@ -47,7 +50,6 @@ def yield_sphinx_only_markup(lines):
         except Exception as ex:
             print(("ERROR: %s, (line(%s)" % (regex, sub)))
             raise ex
-
         return line
 
     for line in lines:
