@@ -29,7 +29,8 @@ def parse_args(argv):
     except confit.NotFoundError:
         root_defined = False
     parser = argparse.ArgumentParser(
-        description='Organize your movie collection using symbolic links')
+        description='Organize your movie collection using symbolic links',
+        epilog='Example: flinck ~/Movies --by genre rating',)
     parser.add_argument('media_src',
                         metavar='FILE|DIR',
                         help='media file or directory')
@@ -55,8 +56,8 @@ def parse_args(argv):
     try:
         args['media_src'] = unicode(args['media_src'], "utf-8",
                                     errors="ignore")
-    except Exception:
-        pass  # py3
+    except NameError:
+        pass  # Python3, no conversion needed
     return args
 
 
