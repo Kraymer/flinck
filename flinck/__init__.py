@@ -20,6 +20,13 @@ from .linker import Linker
 __version__ = '0.2.0'
 __author__ = 'Fabrice Laporte <kraymer@gmail.com>'
 
+def to_unicode(text):
+    try:
+        return unicode(text, "utf-8", errors="ignore")
+    except NameError:
+        pass  # Python3, no conversion needed
+    return text
+
 
 def parse_args(argv):
     """Build application argument parser and parse command line.
@@ -33,7 +40,8 @@ def parse_args(argv):
         epilog='Example: flinck ~/Movies --by genre rating',)
     parser.add_argument('media_src',
                         metavar='FILE|DIR',
-                        help='media file or directory')
+                        help='media file or directory',
+                        type=to_unicode)
     parser.add_argument('-l', '--link_dir',
                         help='links root directory',
                         dest='link_root_dir',
@@ -52,13 +60,7 @@ def parse_args(argv):
                         help='display version information and exit')
     args = parser.parse_args(args=argv[1:])
     config.set_args(args)
-    args = vars(args)
-    try:
-        args['media_src'] = unicode(args['media_src'], "utf-8",
-                                    errors="ignore")
-    except NameError:
-        pass  # Python3, no conversion needed
-    return args
+    return vars(args)
 
 
 def recursive_glob(treeroot):
