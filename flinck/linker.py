@@ -84,7 +84,7 @@ class Linker():
         self.config.add({'link_format': default_link_format})
         self.link_format = self.config['link_format'].get()
 
-    def flink(self, item):
+    def flink(self, item, verbose):
         link_path = resolve_template(os.path.join(self.root,
                                      self.link_format), item)
         link_dir, link_name = os.path.split(link_path)
@@ -94,8 +94,9 @@ class Linker():
         if self.buckets:
             bucket = find_bucket(link_dir, item[self.field])
             if not bucket:
-                print("Found no folder defining a compatible "
-                      "range for '%s'" % item[self.field])
+                if verbose:
+                    print("Found no folder defining a compatible "
+                          "range for '%s'" % item[self.field])
             else:
                 last_dir = os.path.join(bucket, last_dir)
         if last_dir:
@@ -104,5 +105,9 @@ class Linker():
         create_dir(link_dir)
         dest = os.path.join(link_dir, link_name)
         if not os.path.lexists(dest):
-            print('Linking %s' % dest)
+            if verbose > 2:
+                print('Linking %s' % dest)
             os.symlink(item['filename'], dest)
+        elif verbose > 2:
+            print('%s already exist' % dest)
+

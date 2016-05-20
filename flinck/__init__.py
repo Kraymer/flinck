@@ -14,14 +14,11 @@ import sys
 from . import confit
 from . import brain
 
-from .config import config
+from .config import config, FIELDS
 from .linker import Linker
 from .version import __version__
 
 __author__ = 'Fabrice Laporte <kraymer@gmail.com>'
-
-FIELDS = ('country', 'director', 'decade', 'genre', 'rating', 'runtime',
-    'title', 'year')
 
 try:
     CFG_ROOT = config['link_root_dir'].get()
@@ -79,6 +76,8 @@ def flinck(media_src, link_dir, by, verbose):
         if item:
             for linker in linkers:
                 linker.flink(item, verbose=verbose)
+            if verbose:
+                print('Done: %s' % os.path.basename(fpath))
         else:
             print('Error: %s: no result in Open Movie Database' %
                 os.path.basename(fpath))
