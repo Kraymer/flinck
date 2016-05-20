@@ -7,7 +7,7 @@
 
 from __future__ import print_function
 
-import argparse
+import click
 import os
 import sys
 
@@ -16,13 +16,18 @@ from . import brain
 
 from .config import config
 from .linker import Linker
+from .version import __version__
 
-__version__ = '0.2.0'
 __author__ = 'Fabrice Laporte <kraymer@gmail.com>'
 
 FIELDS = ('country', 'director', 'decade', 'genre', 'rating', 'runtime',
     'title', 'year')
 
+try:
+    CFG_ROOT = config['link_root_dir'].get()
+except confit.NotFoundError:
+    CFG_ROOT = ''
+CFG_FIELDS = set(config.keys()).intersection(FIELDS)
 
 def to_unicode(text):
     try:
@@ -30,44 +35,6 @@ def to_unicode(text):
     except NameError:
         pass  # Python3, no conversion needed
     return text
-
-
-def parse_args(argv):
-    """Build application argument parser and parse command line.
-    """
-    try:
-        root_defined = config['link_root_dir'].get()
-    except confit.NotFoundError:
-        root_defined = False
-    config_by_fields = set(config.keys()).intersection(FIELDS)
-
-    parser = argparse.ArgumentParser(
-        description='Organize your movie collection using symbolic links',
-        epilog='Example: flinck ~/Movies --by genre rating',)
-    parser.add_argument('media_src',
-                        metavar='FILE|DIR',
-                        help='media file or directory',
-                        type=to_unicode)
-    parser.add_argument('-l', '--link_dir',
-                        help='links root directory',
-                        dest='link_root_dir',
-                        required=(not root_defined))
-    parser.add_argument('--by',
-                        choices=FIELDS,
-                        nargs='+',
-                        metavar='FIELD1 FIELD2',
-                        default=config_by_fields,
-                        required=(not config_by_fields),
-                        help=('organize medias by...\n'
-                              'Possible fields: {%(choices)s}'))
-    parser.add_argument('--version',
-                        action='version',
-                        version='%(prog)s ' + __version__,
-                        help='display version information and exit')
-    args = parser.parse_args(args=argv[1:])
-    config.set_args(args)
-    return vars(args)
-
 
 def recursive_glob(treeroot):
     """Browse folders hierarchy and yield files with
@@ -87,26 +54,35 @@ def recursive_glob(treeroot):
                 yield abs_path
 
 
-def main(argv=None):
-    args = parse_args(argv or sys.argv)
-    if not args:
-        exit(1)
-    config_filename = os.path.join(config.config_dir(),
-                                   confit.CONFIG_FILENAME)
-    if not os.path.exists(config_filename):
-        print('Missing configuration file %s.' % config_filename)
-    if not os.path.exists(config['link_root_dir'].as_filename()):
+@click.command(context_settings=dict(help_option_names=['-h', '--help']))
+@click.argument('media_src', type=click.Path(exists=True), metavar='FILE|DIR')
+@click.option('--link_dir', '-l', type=click.Path(exists=True),
+    required=(not CFG_ROOT),
+    default=os.path.expanduser(CFG_ROOT),
+    help='Links root directory')
+@click.option('--by', '-b', multiple=True, type=click.Choice(FIELDS),
+    required=(not CFG_FIELDS),
+    help='Organize medias by...')
+@click.option('-v', '--verbose', count=True)
+@click.version_option(__version__)
+def flinck(media_src, link_dir, by, verbose):
+    if link_dir:
+        config['link_root_dir'] = link_dir
+    if not config['link_root_dir'] or not \
+            os.path.exists(config['link_root_dir'].as_filename()):
         print('Error: links root directory "%s" does not exist.' %
               config['link_root_dir'])
         exit(1)
-    linkers = [Linker(field) for field in args['by']]
-    for fpath in recursive_glob(args['media_src']):
-        item = brain.search_filename(fpath, args['by'])
+    linkers = [Linker(field) for field in by]
+    for fpath in recursive_glob(media_src):
+        item = brain.search_filename(fpath, by, verbose=verbose)
         if item:
             for linker in linkers:
-                linker.flink(item)
+                linker.flink(item, verbose=verbose)
         else:
-            print('No Open Movie Database matching for %s' % fpath)
+            print('Error: %s: no result in Open Movie Database' %
+                os.path.basename(fpath))
+
 
 if __name__ == "__main__":
-    sys.exit(main())
+    flinck()

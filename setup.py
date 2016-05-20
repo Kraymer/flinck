@@ -9,6 +9,7 @@ import re
 
 from setuptools import setup
 
+from flinck import version
 
 def yield_sphinx_only_markup(lines):
     """http://stackoverflow.com/a/25900928/5181
@@ -56,21 +57,9 @@ def yield_sphinx_only_markup(lines):
         yield clean_line(line)
 
 
-def version():
-    path = os.path.join(os.path.dirname(__file__), 'flinck', '__init__.py')
-    with open(path) as f:
-        for line in f:
-            tokens = line.split('__version__ = ')
-            if len(tokens) > 1:
-                return tokens[1].strip("' \n")
-        else:
-            print('No version defined')
-            exit(1)
-
-
 readme_lines = open('README.rst').readlines()
 setup(name='flinck',
-    version=version(),
+    version=__version__,
     description='Sort your movies on filesystem using symlinks.',
     long_description=''.join(yield_sphinx_only_markup(readme_lines)),
     author='Fabrice Laporte',
@@ -85,7 +74,8 @@ setup(name='flinck',
             'flinck = flinck:main',
         ],
     },
-    install_requires=['omdb',
+    install_requires=['click',
+        'omdb',
         'unidecode',
         'pyyaml'],
     classifiers=[
