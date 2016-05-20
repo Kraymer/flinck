@@ -20,8 +20,7 @@ FNAME_SPLIT_RE = '|'.join([r'\W%s(?:\W|$)' % x
                                      r'[\(\[]\D+[\)\]]',  # parentheses
                                      'bluray', 'x264', 'ac3',  # format
                                      r'b[dr]rip', 'xvid', 'divx', 'fansub',
-                                     r'S\d+(E\d+)?',  # seasons
-                                     r'(true)?french',  # langs
+                                     r'S\d+(E\d+)?',      # seasons
                                      'avi', 'mkv')])
 CACHED_RESULTS = {}
 
