@@ -47,7 +47,7 @@ def format_field(item, field):
                 item[field] = re.findall(r'\d+', item['runtime']
                                          )[0].zfill(3) + ' min'
             elif field == 'decade':
-                item['decade'] = item['decade'].strip('-')[:-1] + '0s'
+                item['decade'] = item['year'].strip(u'–')[:-1] + '0s'
             elif field == 'rating':
                 item['rating'] = item.pop('imdb_rating')
         except Exception:
