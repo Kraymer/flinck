@@ -8,8 +8,12 @@ from __future__ import print_function
 
 import os
 import re
+import urllib
+
 import omdb
-from .config import FIELDS
+import requests
+
+from .config import config, FIELDS
 
 # Regex to extract title and year. Should work as long as they are at the
 # beginning and in that order.
@@ -33,7 +37,19 @@ def scrub(text, chars, new):
     return text.strip()
 
 
+def google_search_by(title, year):
+    engine_id = '009217259823014548361:0gf2jfpzpbm'
+    url = (u'https://www.googleapis.com/customsearch/v1?key='
+        '%s&cx=%s&q=%s+%s' % (config['google_api_key'], engine_id,
+            urllib.quote(title.encode('utf8')), year))
+    r = requests.get(url)
+    if r.status_code == 200:
+        return r.json()['items'][0]['link'].strip('/').split('/')[-1]
+
+
 def format_field(item, field):
+    """Tweak the string representation of the item field
+    """
     if item.get(field, None) == 'N/A':
         item[field] = 'Unknown'
     else:
@@ -53,7 +69,18 @@ def format_field(item, field):
             item[field] = 'Unknown'
 
 
-def search_by(title, year, fields, verbose=0):
+def format_item(item, fields):
+    """Strip item from needless keys, format others values adequately
+    """
+    for key in item.keys():
+        if key not in FIELDS:
+            item.pop(key, None)
+    for field in fields:
+        format_field(item, field)
+    return item
+
+
+def search_by(title, year, fields, verbose, imdb_id=None):
     """Search movie infos using its title and year
     """
     if (title, year) in CACHED_RESULTS:
@@ -61,21 +88,27 @@ def search_by(title, year, fields, verbose=0):
         if verbose > 1:
             print('Get from cache: %s' % item)
     else:
-        query = {'fullplot': False, 'tomatoes': False, 'title': title,
-            'year': year}
+        query = {'fullplot': False, 'tomatoes': False}
+        if imdb_id:
+            query['imdbid'] = imdb_id
+        else:
+            query['title'] = title
+            query['year'] = year
         if verbose > 1:
             print('Query: %s' % query)
         item = omdb.get(**query)
         if item:
-            for key in item.keys():
-                if key not in FIELDS:
-                    item.pop(key, None)
-            for field in fields:
-                format_field(item, field)
-        CACHED_RESULTS[(title, year)] = item
+            item = format_item(item, fields)
+            CACHED_RESULTS[(title, year)] = item
+        else:
+            imdb_id = google_search_by(title, year)
+            if imdb_id:
+                item = search_by(title, year, fields, verbose, imdb_id)
+                item['title'] = title  # force original title
+                return item
     return item
 
-def search_filename(fname, fields, verbose=0):
+def search_filename(fname, fields, verbose):
     """Extract movie title/date from filename and return dict with movies infos
     """
     path_tokens = os.path.normpath(fname).split(os.sep)
