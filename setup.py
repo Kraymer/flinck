@@ -76,7 +76,6 @@ setup(name='flinck',
     },
     install_requires=['click',
         'omdb',
-        'unidecode',
         'pyyaml'],
     classifiers=[
         'License :: OSI Approved :: MIT License',

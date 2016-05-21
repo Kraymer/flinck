@@ -8,7 +8,6 @@ from __future__ import print_function
 
 import os
 import re
-from unidecode import unidecode
 import omdb
 from .config import FIELDS
 
