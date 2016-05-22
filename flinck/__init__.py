@@ -7,9 +7,11 @@
 
 from __future__ import print_function
 
-import click
+import logging
 import os
 import sys
+
+import click
 
 from . import confit
 from . import brain
@@ -20,18 +22,7 @@ from .version import __version__
 
 __author__ = 'Fabrice Laporte <kraymer@gmail.com>'
 
-try:
-    CFG_ROOT = config['link_root_dir'].get()
-except confit.NotFoundError:
-    CFG_ROOT = ''
-CFG_FIELDS = set(config.keys()).intersection(FIELDS)
 
-def to_unicode(text):
-    try:
-        return unicode(text, "utf-8", errors="ignore")
-    except NameError:
-        pass  # Python3, no conversion needed
-    return text
 
 def recursive_glob(treeroot):
     """Browse folders hierarchy and yield files with
@@ -54,11 +45,11 @@ def recursive_glob(treeroot):
 @click.command(context_settings=dict(help_option_names=['-h', '--help']))
 @click.argument('media_src', type=click.Path(exists=True), metavar='FILE|DIR')
 @click.option('--link_dir', '-l', type=click.Path(exists=True),
-    required=(not CFG_ROOT),
-    default=os.path.expanduser(CFG_ROOT),
+    required=(not config['link_root_dir']),
+    default=os.path.expanduser(config['link_root_dir'].get()),
     help='Links root directory')
 @click.option('--by', '-b', multiple=True, type=click.Choice(FIELDS),
-    required=(not CFG_FIELDS),
+    required=(not set(config.keys()).intersection(FIELDS)),
     help='Organize medias by...')
 @click.option('-v', '--verbose', count=True)
 @click.version_option(__version__)
