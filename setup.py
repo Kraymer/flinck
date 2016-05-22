@@ -9,8 +9,6 @@ import re
 
 from setuptools import setup
 
-from flinck import version
-
 def yield_sphinx_only_markup(lines):
     """http://stackoverflow.com/a/25900928/5181
        Cleans-up Sphinx-only constructs (ie from README.rst),
@@ -59,7 +57,7 @@ def yield_sphinx_only_markup(lines):
 
 readme_lines = open('README.rst').readlines()
 setup(name='flinck',
-    version=__version__,
+    version='0.3.0',
     description='Sort your movies on filesystem using symlinks.',
     long_description=''.join(yield_sphinx_only_markup(readme_lines)),
     author='Fabrice Laporte',
