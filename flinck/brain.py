@@ -105,7 +105,7 @@ def search_by(title, year, fields, verbose, imdb_id=None):
         if item:
             item = format_item(item, fields)
             CACHED_RESULTS[(title, year)] = item
-        else:
+        elif not imdb_id and config['google_api_key']:
             imdb_id = google_search_by(title, year)
             if imdb_id:
                 item = search_by(title, year, fields, verbose, imdb_id)
