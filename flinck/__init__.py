@@ -21,7 +21,16 @@ from .linker import Linker
 from .version import __version__
 
 __author__ = 'Fabrice Laporte <kraymer@gmail.com>'
+logger = logging.getLogger(__name__)
 
+
+def set_logging(verbose):
+    levels = {0: logging.WARNING, 1: logging.INFO, 2: logging.DEBUG}
+    logger.setLevel(levels[verbose])
+    ch = logging.StreamHandler()
+    ch.setLevel(levels[verbose])
+    ch.setFormatter(logging.Formatter('%(levelname)s: %(message)s'))
+    logger.addHandler(ch)
 
 
 def recursive_glob(treeroot):
@@ -58,19 +67,19 @@ def flinck(media_src, link_dir, by, verbose):
         config['link_root_dir'] = link_dir
     if not config['link_root_dir'] or not \
             os.path.exists(config['link_root_dir'].as_filename()):
-        print('Error: links root directory "%s" does not exist.' %
+        logger.error('Error: links root directory "%s" does not exist.' %
               config['link_root_dir'])
         exit(1)
+    set_logging(verbose)
     linkers = [Linker(field) for field in by]
     for fpath in recursive_glob(media_src):
-        item = brain.search_filename(fpath, by, verbose=verbose)
+        item = brain.search_filename(fpath, by)
         if item:
             for linker in linkers:
                 linker.flink(item, verbose=verbose)
-            if verbose:
-                print('Done: %s' % os.path.basename(fpath))
+            logger.info('%s: done' % os.path.basename(fpath))
         else:
-            print('Error: %s: no result in Open Movie Database' %
+            logger.warning('%s: no result in Open Movie Database' %
                 os.path.basename(fpath))
 
 

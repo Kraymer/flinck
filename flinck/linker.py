@@ -5,11 +5,14 @@
 
 from __future__ import print_function
 
+import logging
 import re
 import os
 from glob import glob
 
 from .config import config
+
+logger = logging.getLogger(__name__)
 
 
 def resolve_template(template, item):
@@ -94,9 +97,8 @@ class Linker():
         if self.buckets:
             bucket = find_bucket(link_dir, item[self.field])
             if not bucket:
-                if verbose:
-                    print("Found no folder defining a compatible "
-                          "range for '%s'" % item[self.field])
+                logger.warning("Found no folder defining a compatible "
+                    "range for '%s'" % item[self.field])
             else:
                 last_dir = os.path.join(bucket, last_dir)
         if last_dir:
@@ -105,9 +107,8 @@ class Linker():
         create_dir(link_dir)
         dest = os.path.join(link_dir, link_name)
         if not os.path.lexists(dest):
-            if verbose > 2:
-                print('Linking %s' % dest)
+            logger.debug('Linking %s' % dest)
             os.symlink(item['filename'], dest)
-        elif verbose > 2:
-            print('%s already exist' % dest)
+        else:
+            logger.warning('%s already exist' % dest)
 

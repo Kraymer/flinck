@@ -6,8 +6,10 @@
 
 from __future__ import print_function
 
+import logging
 import os
 import re
+import sys
 try:
     from urllib import quote
 except ImportError:
@@ -29,6 +31,7 @@ FNAME_SPLIT_RE = '|'.join([r'\W%s(?:\W|$)' % x
                                      r'S\d+(E\d+)?',      # seasons
                                      'avi', 'mkv')])
 CACHED_RESULTS = {}
+logger = logging.getLogger(__name__)
 
 
 def scrub(text, chars, new):
@@ -85,13 +88,20 @@ def format_item(item, fields):
     return item
 
 
-def search_by(title, year, fields, verbose, imdb_id=None):
+def to_unicode(text):
+    try:
+        return unicode(text, sys.getfilesystemencoding(), errors="ignore")
+    except NameError:
+        pass  # Python3, no conversion needed
+    return text
+
+
+def search_by(title, year, fields, imdb_id=None):
     """Search movie infos using its title and year
     """
     if (title, year) in CACHED_RESULTS:
         item = CACHED_RESULTS[(title, year)]
-        if verbose > 1:
-            print('Get from cache: %s' % item)
+        logger.debug('Get from cache: %s' % item)
     else:
         query = {'fullplot': False, 'tomatoes': False}
         if imdb_id:
@@ -99,21 +109,19 @@ def search_by(title, year, fields, verbose, imdb_id=None):
         else:
             query['title'] = title
             query['year'] = year
-        if verbose > 1:
-            print('Query: %s' % query)
+        logger.debug('Query: %s' % query)
         item = omdb.get(**query)
         if item:
+            item['title'] = to_unicode(title)  # force original title
             item = format_item(item, fields)
             CACHED_RESULTS[(title, year)] = item
         elif not imdb_id and config['google_api_key']:
             imdb_id = google_search_by(title, year)
             if imdb_id:
-                item = search_by(title, year, fields, verbose, imdb_id)
-                item['title'] = title  # force original title
-                return item
+                item = search_by(title, year, fields, imdb_id)
     return item
 
-def search_filename(fname, fields, verbose):
+def search_filename(fname, fields):
     """Extract movie title/date from filename and return dict with movies infos
     """
     path_tokens = os.path.normpath(fname).split(os.sep)
@@ -127,9 +135,9 @@ def search_filename(fname, fields, verbose):
         toks = re.split(r'(%s)' % years[-1], res)
     else:
         toks = [res]
-    title = toks[0].strip() # unidecode(toks[0].strip())
+    title = toks[0].strip()
     year = toks[1] if len(toks) > 1 else None
-    item = search_by(title, year, fields, verbose)
+    item = search_by(title, year, fields)
     if item:
         item['filename'] = fname
         return item
