@@ -8,7 +8,10 @@ from __future__ import print_function
 
 import os
 import re
-import urllib
+try:
+    from urllib import quote
+except ImportError:
+    from urllib.parse import quote
 
 import omdb
 import requests
@@ -41,7 +44,7 @@ def google_search_by(title, year):
     engine_id = '009217259823014548361:0gf2jfpzpbm'
     url = (u'https://www.googleapis.com/customsearch/v1?key='
         '%s&cx=%s&q=%s+%s' % (config['google_api_key'], engine_id,
-            urllib.quote(title.encode('utf8')), year))
+            quote(title), year))
     r = requests.get(url)
     if r.status_code == 200:
         return r.json()['items'][0]['link'].strip('/').split('/')[-1]
