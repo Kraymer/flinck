@@ -47,7 +47,9 @@ def google_search_by(title, year):
             quote(title), year))
     r = requests.get(url)
     if r.status_code == 200:
-        return r.json()['items'][0]['link'].strip('/').split('/')[-1]
+        json = r.json()
+        if 'items' in json:
+            return r.json()['items'][0]['link'].strip('/').split('/')[-1]
 
 
 def format_field(item, field):
