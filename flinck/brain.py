@@ -77,7 +77,7 @@ def format_field(item, field):
 def format_item(item, fields):
     """Strip item from needless keys, format others values adequately
     """
-    for key in item.keys():
+    for key in list(item):
         if key not in FIELDS:
             item.pop(key, None)
     for field in fields:
