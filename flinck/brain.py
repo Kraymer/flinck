@@ -55,36 +55,22 @@ def google_search_by(title, year):
             return r.json()['items'][0]['link'].strip('/').split('/')[-1]
 
 
-def format_field(item, field):
+def format_item(item):
     """Tweak the string representation of the item field
     """
-    if item.get(field, None) == 'N/A':
-        item[field] = 'Unknown'
-    else:
-        try:
-            if field in ('country', 'genre'):
-                item[field] = item[field].split(',')[0]
-            elif field == 'director':
-                item[field] = item[field].replace(', ', ' and ')
-            elif field == 'runtime':
-                item[field] = re.findall(r'\d+', item['runtime']
-                                         )[0].zfill(3) + ' min'
-            elif field == 'decade':
-                item['decade'] = item['year'].strip(u'–')[:-1] + '0s'
-            elif field == 'rating':
-                item['rating'] = item.pop('imdb_rating')
-        except Exception:
+    for field in set(list(item) + list(FIELDS)):
+        if item.get(field, None) == 'N/A':
             item[field] = 'Unknown'
-
-
-def format_item(item, fields):
-    """Strip item from needless keys, format others values adequately
-    """
-    for key in list(item):
-        if key not in FIELDS:
-            item.pop(key, None)
-    for field in fields:
-        format_field(item, field)
+    try:
+        for field in ('country', 'genre'):
+            item[field] = item[field].split(',')[0]
+        item['director'] = item['director'].replace(', ', ' and ')
+        item['runtime'] = re.findall(r'\d+', item['runtime']
+                                     )[0].zfill(3) + ' min'
+        item['decade'] = item['year'].strip(u'–')[:-1] + '0s'
+        item['rating'] = item.pop('imdb_rating')
+    except Exception:
+        item[field] = 'Unknown'
     return item
 
 
@@ -113,7 +99,7 @@ def search_by(title, year, fields, imdb_id=None):
         item = omdb.get(**query)
         if item:
             item['title'] = to_unicode(title)  # force original title
-            item = format_item(item, fields)
+            item = format_item(item)
             CACHED_RESULTS[(title, year)] = item
         elif not imdb_id and config['google_api_key']:
             imdb_id = google_search_by(title, year)
