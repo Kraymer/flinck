@@ -67,6 +67,10 @@ def find_bucket(parent_dir, val):
         if 0 <= distance <= min_distance:
             bucket = c
             min_distance = distance
+
+    if not bucket:
+        logger.warning("Found no folder defining a compatible "
+            "range for '%s'" % val)
     return bucket
 
 
@@ -96,14 +100,10 @@ class Linker():
             last_dir = item[self.field]
         if self.buckets:
             bucket = find_bucket(link_dir, item[self.field])
-            if not bucket:
-                logger.warning("Found no folder defining a compatible "
-                    "range for '%s'" % item[self.field])
-            else:
-                last_dir = os.path.join(bucket, last_dir)
+            if bucket and bucket != last_dir:
+                last_dir = os.path.join(bucket , last_dir)
         if last_dir:
             link_dir = os.path.join(link_dir, last_dir)
-
         create_dir(link_dir)
         dest = os.path.join(link_dir, link_name)
         if not os.path.lexists(dest):
