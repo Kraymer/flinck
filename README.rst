@@ -16,9 +16,11 @@ CLI tool to organize your movies into a browsable directory tree offering fast a
 Features
 --------
 
-- smart extraction of movie name from its folder/file, use IMDB api to get infos
+- smart extraction of movie name from its folder/file, use `OMDB`_ api to get infos
 - sane limited set of configuration options, yet highly flexible directories resulting structure
 - possible to split links into alphabetical buckets (A-C, D-F, etc) for large libraries
+
+.. _OMDB: http://www.omdbapi.com/
 
 Install
 -------
@@ -47,7 +49,7 @@ Usage
 
     Organize your movie collection using symbolic links
 
-    Example: flinck ~/Movies --by genre rating
+    Example: flinck --by genre --by rating ~/Movies 
 
 More infos on `Wiki`_
 
