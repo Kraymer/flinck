@@ -51,6 +51,15 @@ def recursive_glob(treeroot):
                 yield abs_path
 
 
+def flinck(media_src, *options):
+    """Entry point to use flinck as a python module
+       Command line options are passed as arguments, eg
+
+           >>> flinck('movie.avi', '-b', 'genre', '-b', 'year')
+    """
+    flinck_cli([media_src] + list(options), standalone_mode=False)
+
+
 @click.command(context_settings=dict(help_option_names=['-h', '--help']))
 @click.argument('media_src', type=click.Path(exists=True), metavar='FILE|DIR')
 @click.option('--link_dir', '-l', type=click.Path(exists=True),
@@ -62,7 +71,7 @@ def recursive_glob(treeroot):
     help='Organize medias by...')
 @click.option('-v', '--verbose', count=True)
 @click.version_option(__version__)
-def flinck(media_src, link_dir, by, verbose):
+def flinck_cli(media_src, link_dir, by, verbose):
     set_logging(verbose)
     if link_dir:
         config['link_root_dir'] = link_dir
@@ -84,4 +93,4 @@ def flinck(media_src, link_dir, by, verbose):
 
 
 if __name__ == "__main__":
-    flinck()
+    flinck_cli()

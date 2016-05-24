@@ -11,4 +11,4 @@
 import flinck
 
 if __name__ == "__main__":
-    flinck.flinck()
+    flinck.flinck_cli()
