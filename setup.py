@@ -4,6 +4,7 @@
 # Copyright (c) 2016 Fabrice Laporte - kray.me
 # The MIT License http://www.opensource.org/licenses/mit-license.php
 
+import io
 import os
 import re
 
