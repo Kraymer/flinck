@@ -63,6 +63,7 @@ def recursive_glob(treeroot):
 @click.option('-v', '--verbose', count=True)
 @click.version_option(__version__)
 def flinck(media_src, link_dir, by, verbose):
+    set_logging(verbose)
     if link_dir:
         config['link_root_dir'] = link_dir
     if not config['link_root_dir'] or not \
@@ -70,13 +71,12 @@ def flinck(media_src, link_dir, by, verbose):
         logger.error('Error: links root directory "%s" does not exist.' %
               config['link_root_dir'])
         exit(1)
-    set_logging(verbose)
     linkers = [Linker(field) for field in by]
     for fpath in recursive_glob(media_src):
         item = brain.search_filename(fpath, by)
         if item:
             for linker in linkers:
-                linker.flink(item, verbose=verbose)
+                linker.flink(item)
             logger.info('%s: done' % os.path.basename(fpath))
         else:
             logger.warning('%s: no result in Open Movie Database' %

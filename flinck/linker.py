@@ -91,7 +91,7 @@ class Linker():
         self.config.add({'link_format': default_link_format})
         self.link_format = self.config['link_format'].get()
 
-    def flink(self, item, verbose):
+    def flink(self, item):
         link_path = resolve_template(os.path.join(self.root,
                                      self.link_format), item)
         link_dir, link_name = os.path.split(link_path)
