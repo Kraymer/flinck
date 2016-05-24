@@ -54,10 +54,12 @@ def yield_sphinx_only_markup(lines):
     for line in lines:
         yield clean_line(line)
 
+with io.open('flinck/__version__.py', 'r') as f:
+    version = re.search(r'^__version__\s*=\s*[\'"]([^\'"]*)[\'"]$', f.read(), re.MULTILINE).group(1)
 
 readme_lines = open('README.rst').readlines()
 setup(name='flinck',
-    version='0.3.0',
+    version=version,
     description='Sort your movies on filesystem using symlinks.',
     long_description=''.join(yield_sphinx_only_markup(readme_lines)),
     author='Fabrice Laporte',

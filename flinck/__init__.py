@@ -18,9 +18,9 @@ from . import brain
 
 from .config import config, FIELDS
 from .linker import Linker
+from .__version__ import __version__
 
 __author__ = 'Fabrice Laporte <kraymer@gmail.com>'
-__version__ = '0.3.0'
 logger = logging.getLogger(__name__)
 
 
