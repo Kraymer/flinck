@@ -1,0 +1,5 @@
+# Include relevant text files.
+include LICENSE README.rst
+
+# Exclude junk.
+global-exclude .DS_Store
