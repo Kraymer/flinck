@@ -1,5 +1,9 @@
 language: python
 
+env:
+  - TOX_ENV=py27
+  - TOX_ENV=py35
+
 python:
     - 2.7
     - 3.5
