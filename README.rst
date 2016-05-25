@@ -92,3 +92,22 @@ Inside it, available settings are :
 
 .. _Google API key: https://code.google.com/apis/console
 
+Changelog
+---------
+
+Available on `Github Releases page`_.  
+
+Want to know when new releases are shipped? Subscribe to the `Versions rss feed`_.
+
+.. _Versions rss feed: http://createfeed.fivefilters.org/extract.php?url=https%3A%2F%2Fgithub.com%2FKraymer%2Fflinck%2Freleases&in_id_or_class=release-title&url_contains=
+.. _Github Releases page: https://github.com/Kraymer/flinck/releases
+
+Feedbacks
+---------
+
+Please submit bugs and features requests on the `Issue tracker`_.
+
+.. _Issue tracker: https://github.com/Kraymer/flinck/issues
+
+
+
