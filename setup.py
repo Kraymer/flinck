@@ -72,7 +72,7 @@ setup(name='flinck',
 
     entry_points={
         'console_scripts': [
-            'flinck = flinck:main',
+            'flinck = flinck:flinck_cli',
         ],
     },
     install_requires=['click',
