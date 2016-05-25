@@ -1,3 +1,8 @@
+.. image:: https://travis-ci.org/Kraymer/flinck.svg?branch=master
+  :target: https://travis-ci.org/Kraymer/flinck
+.. image:: http://img.shields.io/pypi/v/flinck.svg
+    :target: https://pypi.python.org/pypi/flinck
+|  
 .. image:: https://raw.githubusercontent.com/Kraymer/flinck/master/docs/_static/logo.png
 
 =====
