@@ -60,13 +60,15 @@ def flinck(media_src, *options):
     flinck_cli([media_src] + list(options), standalone_mode=False)
 
 
-@click.command(context_settings=dict(help_option_names=['-h', '--help']))
+@click.command(context_settings=dict(help_option_names=['-h', '--help']),
+    help='Organize your movie collection using symbolic links.',
+    epilog='Example: flinck -l ./ --by genre --by rating ~/Movies')
 @click.argument('media_src', type=click.Path(exists=True), metavar='FILE|DIR')
 @click.option('--link_dir', '-l', type=click.Path(exists=True),
     required=(not config['link_root_dir']),
     default=os.path.expanduser(config['link_root_dir'].get()),
     help='Links root directory')
-@click.option('--by', '-b', multiple=True, type=click.Choice(FIELDS),
+@click.option('--by', '-b', multiple=True, type=click.Choice(sorted(FIELDS)),
     required=(not set(config.keys()).intersection(FIELDS)),
     help='Organize medias by...')
 @click.option('-v', '--verbose', count=True)

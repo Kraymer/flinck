@@ -47,14 +47,19 @@ Usage
 
 ::
 
-    usage: flinck.py [-h] [-l LINK_DIR] --by
-                     {country,director,decade,genre,rating,runtime,title,year}
-                     [{country,director,decade,genre,rating,runtime,title,year} ...]
-                     FILE|DIR
+    Usage: flinck.py [OPTIONS] FILE|DIR
 
-    Organize your movie collection using symbolic links
+      Organize your movie collection using symbolic links.
 
-    Example: flinck --by genre --by rating ~/Movies 
+    Options:
+      -l, --link_dir PATH             Links root directory
+      -b, --by [country|decade|director|genre|rating|runtime|title|year]
+                                      Organize medias by...
+      -v, --verbose
+      --version                       Show the version and exit.
+      -h, --help                      Show this message and exit.
+
+      Example: flinck -l ./ --by genre --by rating ~/Movies
 
 More infos on `Wiki`_
 
@@ -100,7 +105,7 @@ Inside it, available settings are :
 Changelog
 ---------
 
-Available on `Github Releases page`_.  
+Available on `Github Releases page`_.
 
 Want to know when new releases are shipped? Subscribe to the `Versions rss feed`_.
 
