@@ -1,8 +1,5 @@
 from . import confit
 
-FIELDS = ('country', 'director', 'decade', 'genre', 'rating', 'runtime',
-    'title', 'year')
-
 config = confit.LazyConfig('flinck', __name__)
 config.add({
     'file_extensions': ['avi', 'm4v', 'mkv', 'mp4'],
@@ -11,3 +8,7 @@ config.add({
     'link_root_dir': '',
     'verbose': False,
 })
+
+FIELDS = ('country', 'director', 'decade', 'genre', 'rating', 'runtime',
+    'title', 'year')
+DEFAULT_FIELDS = set(config.keys()).intersection(FIELDS)

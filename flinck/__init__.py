@@ -16,7 +16,7 @@ import click
 from . import confit
 from . import brain
 
-from .config import config, FIELDS
+from .config import config, FIELDS, DEFAULT_FIELDS
 from .linker import Linker
 from .__version__ import __version__
 
@@ -54,7 +54,6 @@ def recursive_glob(treeroot):
 def flinck(media_src, *options):
     """Entry point to use flinck as a python module
        Command line options are passed as arguments, eg
-
            >>> flinck('movie.avi', '-b', 'genre', '-b', 'year')
     """
     flinck_cli([media_src] + list(options), standalone_mode=False)
@@ -69,7 +68,7 @@ def flinck(media_src, *options):
     default=os.path.expanduser(config['link_root_dir'].get()),
     help='Links root directory')
 @click.option('--by', '-b', multiple=True, type=click.Choice(sorted(FIELDS)),
-    required=(not set(config.keys()).intersection(FIELDS)),
+    required=(not DEFAULT_FIELDS), default=DEFAULT_FIELDS,
     help='Organize medias by...')
 @click.option('-v', '--verbose', count=True)
 @click.version_option(__version__)
