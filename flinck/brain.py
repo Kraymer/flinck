@@ -46,14 +46,37 @@ def scrub(text, chars, new):
 def google_search_by(title, year):
     engine_id = '009217259823014548361:0gf2jfpzpbm'
     url = (u'https://www.googleapis.com/customsearch/v1?key='
-        '%s&cx=%s&q=%s+%s' % (config['google_api_key'], engine_id,
-            quote(title), year))
+           '%s&cx=%s&q=%s+%s' % (config['google_api_key'], engine_id,
+                                 quote(title), year))
     r = requests.get(url)
     if r.status_code == 200:
         json = r.json()
         if 'items' in json:
             return r.json()['items'][0]['link'].strip('/').split('/')[-1]
 
+def format_field(item, field):
+    """Format item field to make the string insertable in a filename
+    """
+    res = None
+    try:
+        if item.get(field, None) == 'Unknown':
+            res = field
+        elif field in ('country', 'genre'):
+            res = item[field].split(',')[0]
+        elif field in ('director',):
+            res = item[field].replace(', ', ' and ')
+        elif field == 'runtime':
+            res = re.findall(r'\d+', item[field]
+                                     )[0].zfill(3) + ' min'
+        elif field == 'decade':
+            res = item['year'].strip(u'–')[:-1] + '0s'
+        elif field == 'rating':
+            res = item.pop('imdb_rating') or item['rating']
+        elif field == 'year':
+            res = re.findall(r'((?:19|20)\d\d)', item[field])[0]
+    except IndexError:
+        res = 'Unknown'
+    return res or item[field]
 
 def format_item(item):
     """Tweak the string representation of the item field
@@ -61,18 +84,9 @@ def format_item(item):
     for field in set(list(item) + list(FIELDS)):
         if item.get(field, None) == 'N/A':
             item[field] = 'Unknown'
-    try:
-        for field in ('country', 'genre'):
-            item[field] = item[field].split(',')[0]
-        item['director'] = item['director'].replace(', ', ' and ')
-        item['runtime'] = re.findall(r'\d+', item['runtime']
-                                     )[0].zfill(3) + ' min'
-        item['decade'] = item['year'].strip(u'–')[:-1] + '0s'
-        item['rating'] = item.pop('imdb_rating')
-    except Exception:
-        item[field] = 'Unknown'
+    for field in FIELDS:
+        item[field] = format_field(item, field)
     return item
-
 
 def to_unicode(text):
     try:
@@ -106,6 +120,7 @@ def search_by(title, year, fields, imdb_id=None):
             if imdb_id:
                 item = search_by(title, year, fields, imdb_id)
     return item
+
 
 def search_filename(fname, fields):
     """Extract movie title/date from filename and return dict with movies infos

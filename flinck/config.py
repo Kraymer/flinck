@@ -9,6 +9,6 @@ config.add({
     'verbose': False,
 })
 
-FIELDS = ('country', 'director', 'decade', 'genre', 'rating', 'runtime',
-    'title', 'year')
+FIELDS = ('country', 'director', 'year', 'decade', 'genre', 'rating', 'runtime',
+    'title')
 DEFAULT_FIELDS = set(config.keys()).intersection(FIELDS)
