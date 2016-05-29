@@ -16,7 +16,7 @@ import click
 from . import confit
 from . import brain
 
-from .config import config, FIELDS, DEFAULT_FIELDS
+from .config import (config, FIELDS, DEFAULT_FIELDS)
 from .linker import Linker
 from .__version__ import __version__
 
@@ -74,11 +74,12 @@ def flinck(media_src, *options):
 @click.version_option(__version__)
 def flinck_cli(media_src, link_dir, by, verbose):
     set_logging(verbose)
+    logger.debug('Loading configuration from %s' % config.user_config_path())
     if link_dir:
         config['link_root_dir'] = link_dir
     if not config['link_root_dir'] or not \
             os.path.exists(config['link_root_dir'].as_filename()):
-        logger.error('Error: links root directory "%s" does not exist.' %
+        logger.error('links root directory "%s" does not exist.' %
               config['link_root_dir'])
         exit(1)
     linkers = [Linker(field) for field in by]
