@@ -2,6 +2,8 @@
   :target: https://travis-ci.org/Kraymer/flinck
 .. image:: http://img.shields.io/pypi/v/flinck.svg
     :target: https://pypi.python.org/pypi/flinck
+.. image:: https://readthedocs.org/projects/flinck/badge/?version=latest
+   :target: http://flinck.readthedocs.io/en/latest/?badge=latest
 |  
 .. image:: https://raw.githubusercontent.com/Kraymer/flinck/master/docs/_static/logo.png
 
