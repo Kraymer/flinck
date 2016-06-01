@@ -61,12 +61,12 @@ Usage
 
       Example: flinck -l ./ --by genre --by rating ~/Movies
 
-More infos on `Wiki`_
+More infos on the `documentation website`_
 
-.. _Wiki: https://github.com/Kraymer/flinck/wiki
+.. _documentation website: http://flinck.readthedocs.io/
 
-Configuration
--------------
+Example of configuration
+------------------------
 
 ``~/.config/flinck/config.yaml`` corresponding to the screenshot above : ::
 
@@ -84,23 +84,6 @@ Configuration
     decade:
         dirs: true
 
-Top settings:
-
-- **link_root_dir**: where the folders tree will be created. Must exist beforehand.
-- **file_extensions**: files types to consider. Default: ``['avi', 'm4v', 'mkv', 'mp4']``
-- **file_min_size_mb**: files whose size is below that threshold are ignored. Default: ``20``
-- **google_api_key**: your `Google API key`_ (to enable the Google Custom Search backend)
-
-Then, you can define a section for each metadata field you want to sort by.
-Inside it, available settings are :
-
-- **root**: root dirname (or relative path from ``link_root_dir``) for this metadata field. Default: the metadata field name.
-- **link_format**: symlink naming format. Default: ``%title-%field``
-- **dirs**: put symlinks into an intermediary directory named after the field value. Default: ``no``
-- **buckets**: put symlinks into a parent matching directory if it does exist. Any directory that contains the field value or defines a matching range is valid.
-  A range is defined by ``[]`` chars, eg *[A-D]* directory matches *Drama* genre field value.
-
-.. _Google API key: https://code.google.com/apis/console
 
 Changelog
 ---------
