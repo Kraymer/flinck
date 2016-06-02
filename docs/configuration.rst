@@ -56,7 +56,8 @@ If you prefer to name your files using the original title, entering a
 Attributes options
 ------------------
 
-You can define a section for each metadata field you want to sort by.
+You can define a section for each metadata field you want to sort by, with the
+following options.
 
 root
 ^^^^
