@@ -4,6 +4,8 @@
     :target: https://pypi.python.org/pypi/flinck
 .. image:: https://readthedocs.org/projects/flinck/badge/?version=latest
    :target: http://flinck.readthedocs.io/en/latest/?badge=latest
+.. image:: https://img.shields.io/badge/rss-subscribe-orange.svg
+   :target: http://createfeed.fivefilters.org/extract.php?url=https%3A%2F%2Fgithub.com%2FKraymer%2Fflinck%2Freleases&in_id_or_class=release-title&url_contains=
 |  
 .. image:: https://raw.githubusercontent.com/Kraymer/flinck/master/docs/_static/logo.png
 
