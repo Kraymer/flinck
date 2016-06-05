@@ -1,26 +1,20 @@
 #!/usr/bin/python
-# -*- coding: utf-8 -*-
 
-"""
-    Flinck: Finger lickin good flicks linker.
-"""
+"""Sort your movies on filesystem using symlinks."""
 
 from __future__ import print_function
 
 import logging
 import os
-import sys
 
 import click
 
-from . import confit
 from . import brain
-
 from .config import (config, FIELDS, DEFAULT_FIELDS)
 from .linker import Linker
-from .__version__ import __version__
 
 __author__ = 'Fabrice Laporte <kraymer@gmail.com>'
+__version__ = '0.3.2'
 logger = logging.getLogger(__name__)
 
 
@@ -60,16 +54,16 @@ def flinck(media_src, *options):
 
 
 @click.command(context_settings=dict(help_option_names=['-h', '--help']),
-    help='Organize your movie collection using symbolic links.',
-    epilog='Example: flinck -l ./ --by genre --by rating ~/Movies')
+               help='Organize your movie collection using symbolic links.',
+               epilog='Example: flinck -l ./ --by genre --by rating ~/Movies')
 @click.argument('media_src', type=click.Path(exists=True), metavar='FILE|DIR')
 @click.option('--link_dir', '-l', type=click.Path(exists=True),
-    required=(not config['link_root_dir']),
-    default=os.path.expanduser(config['link_root_dir'].get()),
-    help='Links root directory')
+              required=(not config['link_root_dir']),
+              default=os.path.expanduser(config['link_root_dir'].get()),
+              help='Links root directory')
 @click.option('--by', '-b', multiple=True, type=click.Choice(sorted(FIELDS)),
-    required=(not DEFAULT_FIELDS), default=DEFAULT_FIELDS,
-    help='Organize medias by...')
+              required=(not DEFAULT_FIELDS), default=DEFAULT_FIELDS,
+              help='Organize medias by...')
 @click.option('-v', '--verbose', count=True)
 @click.version_option(__version__)
 def flinck_cli(media_src, link_dir, by, verbose):
@@ -80,7 +74,7 @@ def flinck_cli(media_src, link_dir, by, verbose):
     if not config['link_root_dir'] or not \
             os.path.exists(config['link_root_dir'].as_filename()):
         logger.error('links root directory "%s" does not exist.' %
-              config['link_root_dir'])
+                     config['link_root_dir'])
         exit(1)
     linkers = [Linker(field) for field in by]
     for fpath in recursive_glob(media_src):
@@ -91,7 +85,7 @@ def flinck_cli(media_src, link_dir, by, verbose):
             logger.info('%s: done' % os.path.basename(fpath))
         else:
             logger.warning('%s: no result in Open Movie Database' %
-                os.path.basename(fpath))
+                           os.path.basename(fpath))
 
 
 if __name__ == "__main__":
