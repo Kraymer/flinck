@@ -29,9 +29,12 @@ def coerce_file(fn):
         return mock
     if fn.endswith('md'):  # convert markdown to rest, filter out nopypi images
         text = '\n'.join([l for l in text.split('\n') if '![nopypi' not in l])
-        p = subprocess.Popen(['pandoc', '-t', 'rst'], stdin=subprocess.PIPE,
-            stdout=subprocess.PIPE)
-        text, stderr = p.communicate(text)
+        try:
+            p = subprocess.Popen(['pandoc', '-t', 'rst'], stdin=subprocess.PIPE,
+                stdout=subprocess.PIPE)
+            text, _ = p.communicate(text)
+        except OSError:
+            text = ''
     return text
 
 
