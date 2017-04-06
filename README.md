@@ -1,7 +1,7 @@
 [![nopypi travis](https://travis-ci.org/Kraymer/flinck.svg?branch=master)](https://travis-ci.org/Kraymer/flinck)
 [![nopypi pypi](http://img.shields.io/pypi/v/flinck.svg)](https://pypi.python.org/pypi/flinck)
 [![nopypi rtfd](https://readthedocs.org/projects/flinck/badge/?version=latest)](http://flinck.readthedocs.io/en/latest/?badge=latest)
-[![nopypi rss](https://img.shields.io/badge/rss-subscribe-orange.svg)](http://createfeed.fivefilters.org/extract.php?url=https%3A%2F%2Fgithub.com%2FKraymer%2Fflinck%2Freleases&in_id_or_class=release-title&url_contains=)
+[![nopypi rss](https://img.shields.io/badge/rss-subscribe-orange.svg)](https://github.com/Kraymer/flinck/releases.atom)
 
 ![](https://raw.githubusercontent.com/Kraymer/flinck/master/docs/_static/logo.png)
 
