@@ -54,6 +54,7 @@ def google_search_by(title, year):
         if 'items' in json:
             return r.json()['items'][0]['link'].strip('/').split('/')[-1]
 
+
 def format_field(item, field):
     """Format item field to make the string insertable in a filename
     """
@@ -67,7 +68,7 @@ def format_field(item, field):
             res = item[field].replace(', ', ' and ')
         elif field == 'runtime':
             res = re.findall(r'\d+', item[field]
-                                     )[0].zfill(3) + ' min'
+                             )[0].zfill(3) + ' min'
         elif field == 'decade':
             res = item['year'].strip(u'–')[:-1] + '0s'
         elif field == 'rating':
@@ -78,6 +79,7 @@ def format_field(item, field):
         res = 'Unknown'
     return res or item[field]
 
+
 def format_item(item):
     """Tweak the string representation of the item field
     """
@@ -87,6 +89,7 @@ def format_item(item):
     for field in FIELDS:
         item[field] = format_field(item, field)
     return item
+
 
 def to_unicode(text):
     try:

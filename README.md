@@ -3,24 +3,18 @@
 [![nopypi rtfd](https://readthedocs.org/projects/flinck/badge/?version=latest)](http://flinck.readthedocs.io/en/latest/?badge=latest)
 [![nopypi rss](https://img.shields.io/badge/rss-subscribe-orange.svg)](http://createfeed.fivefilters.org/extract.php?url=https%3A%2F%2Fgithub.com%2FKraymer%2Fflinck%2Freleases&in_id_or_class=release-title&url_contains=)
 
-![](https://raw.githubusercontent.com/Kraymer/flinck/master/docs/_static/logo.png)
+![nopypi logo](https://raw.githubusercontent.com/Kraymer/flinck/master/docs/_static/logo.png)
 
-* * * * *
+## flinck 
 
-> [flingk]
-> :   *verb tr.* To create a symlink to a movie (flick)
->
+> /flingk/
+> :   1. *verb tr.* to create a symlink to a movie (flick)
+>     2. *n.* CLI tool to organize your movies into a browsable directory tree 
+>     offering fast access by dates, imdb ratings, etc
 
-Description
-===========
+## Description
 
 ![](https://raw.githubusercontent.com/Kraymer/flinck/master/docs/_static/screenshot.png)
-
-CLI tool to organize your movies into a browsable directory tree
-offering fast access by dates, imdb ratings, etc
-
-Features
-========
 
 -   smart extraction of movie name from its folder/file, use
     [OMDB](http://www.omdbapi.com/) api to get infos
@@ -29,8 +23,7 @@ Features
 -   possible to split links into alphabetical buckets (A-C, D-F, etc)
     for large libraries
 
-Install
-=======
+## Install
 
 flinck is written for [Python 2.7](https://www.python.org/downloads/)
 and [Python 3](https://www.python.org/downloads/).
@@ -41,8 +34,7 @@ Install with [pip](https://pip.pypa.io/en/stable/) via
 If you're on Windows and don't have pip yet, follow [this
 guide](https://pip.pypa.io/en/latest/installing/) to install it.
 
-Usage
-=====
+## Usage
 
     Usage: flinck.py [OPTIONS] FILE|DIR
 
@@ -60,8 +52,7 @@ Usage
 
 More infos on the [documentation website](http://flinck.readthedocs.io/)
 
-Example of configuration
-========================
+## Example of configuration
 
 `~/.config/flinck/config.yaml` corresponding to the screenshot above : :
 
@@ -79,8 +70,7 @@ Example of configuration
     decade:
         dirs: true
 
-Changelog
-=========
+## Changelog
 
 Available on [Github Releases
 page](https://github.com/Kraymer/flinck/releases).
@@ -88,8 +78,7 @@ page](https://github.com/Kraymer/flinck/releases).
 Want to know when new releases are shipped? Subscribe to the [Versions rss 
 feed](http://createfeed.fivefilters.org/extract.php?url=https%3A%2F%2Fgithub.com%2FKraymer%2Fflinck%2Freleases&in_id_or_class=release-title&url_contains=).
 
-Feedbacks
-=========
+## Feedbacks
 
 Please submit bugs and features requests on the [Issue
 tracker](https://github.com/Kraymer/flinck/issues).

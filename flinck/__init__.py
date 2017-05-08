@@ -18,7 +18,7 @@ __version__ = '0.3.2'
 logger = logging.getLogger(__name__)
 
 
-def set_logging(verbose):
+def set_logging(verbose=False):
     levels = {0: logging.WARNING, 1: logging.INFO, 2: logging.DEBUG}
     logger.setLevel(levels[verbose])
     ch = logging.StreamHandler()
