@@ -62,7 +62,7 @@ def find_bucket(parent_dir, val):
     bucket = None
     min_distance = 99
     for c in sorted([os.path.basename(c.strip(os.path.sep))
-                    for c in candidates], key=lambda x: x.strip('[]').lower()):
+                     for c in candidates], key=lambda x: x.strip('[]').lower()):
         distance = dircmp(val.lower(), c.lower())
         if 0 <= distance <= min_distance:
             bucket = c
@@ -70,17 +70,18 @@ def find_bucket(parent_dir, val):
 
     if not bucket:
         logger.warning("Found no folder defining a compatible "
-            "range for '%s'" % val)
+                       "range for '%s'" % val)
     return bucket
 
 
 class Linker():
+
     def __init__(self, name):
         self.field = name
         self.config = config[name]
         self.config.add({'root': self.field,
-                        'dirs': False,
-                        'buckets': False})
+                         'dirs': False,
+                         'buckets': False})
         self.root = self.config['root'].get()
         self.dirs = self.config['dirs'].get()
         self.buckets = self.config['buckets'].get()
@@ -93,7 +94,7 @@ class Linker():
 
     def flink(self, item):
         link_path = resolve_template(os.path.join(self.root,
-                                     self.link_format), item)
+                                                  self.link_format), item)
         link_dir, link_name = os.path.split(link_path)
         last_dir = ''
         if self.dirs:
@@ -101,7 +102,7 @@ class Linker():
         if self.buckets:
             bucket = find_bucket(link_dir, item[self.field])
             if bucket and bucket != last_dir:
-                last_dir = os.path.join(bucket , last_dir)
+                last_dir = os.path.join(bucket, last_dir)
         if last_dir:
             link_dir = os.path.join(link_dir, last_dir)
         create_dir(link_dir)
@@ -111,4 +112,3 @@ class Linker():
             os.symlink(item['filename'], dest)
         else:
             logger.warning('%s already exist' % dest)
-

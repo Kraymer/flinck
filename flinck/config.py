@@ -10,5 +10,5 @@ config.add({
 })
 
 FIELDS = ('country', 'director', 'year', 'decade', 'genre', 'rating', 'runtime',
-    'title')
+          'title')
 DEFAULT_FIELDS = set(config.keys()).intersection(FIELDS)
