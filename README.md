@@ -7,8 +7,8 @@
 
 ## flinck 
 
-> /flingk/
-> :   1. *verb tr.* to create a symlink to a movie (flick)
+> /flingk/  
+>     1. *verb tr.* to create a symlink to a movie (flick)  
 >     2. *n.* CLI tool to organize your movies into a browsable directory tree 
 >     offering fast access by dates, imdb ratings, etc
 
