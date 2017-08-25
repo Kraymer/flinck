@@ -26,7 +26,7 @@ def coerce_file(fn):
             setattr(mock, attr, m.group(1) if m else None)
         mock.docstring = ast.get_docstring(ast.parse(text))
         return mock
-    if fn.endswith('md'):  # convert markdown to rest, filter out nopypi images
+    if fn.endswith('md') and 'upload' in sys.argv:  # convert md to rest on pypi package upload
         text = '\n'.join([l for l in text.split('\n') if '![nopypi' not in l])
         p = subprocess.Popen(['pandoc', '-t', 'rst'], stdin=subprocess.PIPE,
                              stdout=subprocess.PIPE)
