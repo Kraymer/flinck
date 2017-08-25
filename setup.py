@@ -1,8 +1,9 @@
 #!/usr/bin/env python
 
-# Copyright (c) 2016 Fabrice Laporte - kray.me
+# Copyright (c) 2017 Fabrice Laporte - kray.me
 # The MIT License http://www.opensource.org/licenses/mit-license.php
 
+import sys
 from setuptools import setup
 
 
