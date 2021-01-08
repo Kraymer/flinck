@@ -1,5 +1,6 @@
 [![nopypi travis](https://travis-ci.org/Kraymer/flinck.svg?branch=master)](https://travis-ci.org/Kraymer/flinck)
 [![nopypi pypi](http://img.shields.io/pypi/v/flinck.svg)](https://pypi.python.org/pypi/flinck)
+[![nopypi downloads](https://pepy.tech/badge/flinck)](https://pepy.tech/project/flinck)
 [![nopypi rtfd](https://readthedocs.org/projects/flinck/badge/?version=latest)](http://flinck.readthedocs.io/en/latest/?badge=latest)
 [![nopypi rss](https://img.shields.io/badge/rss-subscribe-orange.svg)](https://github.com/Kraymer/flinck/releases.atom)
 
